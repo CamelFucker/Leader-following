@@ -1,0 +1,30 @@
+#IncludeRegexLine: ^[ 	]*[#%][ 	]*(include|import)[ 	]*[<"]([^">]+)([">])
+
+#IncludeRegexScan: ^.*$
+
+#IncludeRegexComplain: ^$
+
+#IncludeRegexTransform: 
+
+/home/nvidia/CLionProjects/leaderfollowing/Leader_following.h
+thread
+-
+iostream
+-
+string
+-
+cmath
+-
+unistd.h
+-
+curses.h
+-
+stdio.h
+-
+ctime
+-
+
+/home/nvidia/CLionProjects/leaderfollowing/main.cpp
+Leader_following.h
+/home/nvidia/CLionProjects/leaderfollowing/Leader_following.h
+
