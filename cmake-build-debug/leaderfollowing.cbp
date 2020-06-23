@@ -87,6 +87,9 @@
 		<Unit filename="/home/nvidia/CLionProjects/leaderfollowing/Communication.cpp">
 			<Option target="leaderfollowing"/>
 		</Unit>
+		<Unit filename="/home/nvidia/CLionProjects/leaderfollowing/Communication.h">
+			<Option target="leaderfollowing"/>
+		</Unit>
 		<Unit filename="/home/nvidia/CLionProjects/leaderfollowing/Control.cpp">
 			<Option target="leaderfollowing"/>
 		</Unit>

@@ -3,10 +3,13 @@
 
 CMakeFiles/leaderfollowing.dir/Communication.o
  /home/nvidia/CLionProjects/leaderfollowing/Communication.cpp
+ /home/nvidia/CLionProjects/leaderfollowing/Communication.h
  /home/nvidia/CLionProjects/leaderfollowing/Leader_following.h
 CMakeFiles/leaderfollowing.dir/Control.o
+ /home/nvidia/CLionProjects/leaderfollowing/Communication.h
  /home/nvidia/CLionProjects/leaderfollowing/Control.cpp
  /home/nvidia/CLionProjects/leaderfollowing/Leader_following.h
 CMakeFiles/leaderfollowing.dir/main.o
+ /home/nvidia/CLionProjects/leaderfollowing/Communication.h
  /home/nvidia/CLionProjects/leaderfollowing/Leader_following.h
  /home/nvidia/CLionProjects/leaderfollowing/main.cpp

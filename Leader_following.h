@@ -10,14 +10,15 @@
 #define SAMPLE_TIME 2000000  //us
 
 #include <thread>
-#include <iostream>
-#include <string>
 #include <cmath>
 #include <unistd.h>
 #include <curses.h>
 #include <stdio.h>
 #include <ctime>
-#include <curses.h>
+
+#include "Communication.h"
+
+
 
 //Signals
 extern int UWB_distance;
@@ -30,12 +31,6 @@ extern int Follower_acceleration;
 extern int Control_steer_angle;
 extern int Control_acceleration;
 
-
-class Communication{
-public:
-    static void CAN1_update();
-    static void CAN2_update();
-};
 
 class Control{
 private:

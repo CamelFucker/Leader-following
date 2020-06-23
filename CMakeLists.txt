@@ -2,7 +2,7 @@
 project(leaderfollowing)
 
 set(CMAKE_CXX_STANDARD 11)
-add_executable(leaderfollowing Leader_following.h main.cpp Control.cpp Communication.cpp)
+add_executable(leaderfollowing Leader_following.h main.cpp Control.cpp Communication.cpp Communication.h)
 # Find thread package
 find_package(Threads REQUIRED)
 target_link_libraries(leaderfollowing Threads::Threads)

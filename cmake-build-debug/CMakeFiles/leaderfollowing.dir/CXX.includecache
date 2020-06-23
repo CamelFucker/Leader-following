@@ -6,12 +6,34 @@
 
 #IncludeRegexTransform: 
 
+/home/nvidia/CLionProjects/leaderfollowing/Communication.cpp
+Leader_following.h
 /home/nvidia/CLionProjects/leaderfollowing/Leader_following.h
-thread
+
+/home/nvidia/CLionProjects/leaderfollowing/Communication.h
+stdio.h
+-
+stdlib.h
+-
+unistd.h
+-
+net/if.h
+-
+sys/ioctl.h
+-
+sys/socket.h
+-
+linux/can.h
+-
+linux/can/raw.h
 -
 iostream
 -
-string
+string.h
+-
+
+/home/nvidia/CLionProjects/leaderfollowing/Leader_following.h
+thread
 -
 cmath
 -
@@ -23,10 +45,6 @@ stdio.h
 -
 ctime
 -
-curses.h
--
-
-/home/nvidia/CLionProjects/leaderfollowing/main.cpp
-Leader_following.h
-/home/nvidia/CLionProjects/leaderfollowing/Leader_following.h
+Communication.h
+/home/nvidia/CLionProjects/leaderfollowing/Communication.h
 

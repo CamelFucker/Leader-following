@@ -19,13 +19,20 @@ int main()
 
     Communication follower_communication;
     Control follower_control;
-
+    /*
     thread th1(&follower_communication.CAN1_update);
     thread th2(&follower_communication.CAN2_update);
     thread th3(&follower_control.Control_update);
     th1.join();
     th2.join();
     th3.join();
+    */
+    int test_message = 234;
+    while(1){
+        follower_communication.CAN_send(test_message);
+        usleep(200000);
+    }
+
 
     return 0;
 }
