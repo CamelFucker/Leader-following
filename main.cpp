@@ -15,11 +15,8 @@ int Control_acceleration = 0 ;
 int main()
 {
     cout << "Main Thread" << endl;
-    char ch;
-    system("stty echo");
-    ch = getch();
-    system("stty echo");
-    cout << "char is " << ch << endl;
+
+
     Communication follower_communication;
     Control follower_control;
 

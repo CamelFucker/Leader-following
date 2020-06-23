@@ -17,6 +17,7 @@
 #include <curses.h>
 #include <stdio.h>
 #include <ctime>
+#include <curses.h>
 
 //Signals
 extern int UWB_distance;

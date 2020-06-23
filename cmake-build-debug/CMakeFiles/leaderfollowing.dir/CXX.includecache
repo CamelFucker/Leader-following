@@ -23,6 +23,8 @@ stdio.h
 -
 ctime
 -
+curses.h
+-
 
 /home/nvidia/CLionProjects/leaderfollowing/main.cpp
 Leader_following.h
