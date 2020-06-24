@@ -34,12 +34,16 @@ void Control::Control_update(){
         control_steer = Control::Caculate_steer(lat_distance,long_distance);
         float control_acc;
         control_acc = Control::Caculate_acc(leader_velocity,follower_velocity,leader_acceleration,long_distance);
+        float brake_pressure;
+        brake_pressure = 0.5;
 
         // convert from float to int
         Control_steer_angle = (int)((control_steer + 3276.7)/0.1); // Signal value = (physical value - offset)/precision value
-        Control_acceleration = (int)control_acc;
-        cout << "control_steer = " << control_steer << endl;
-        cout << "Control is updating " << endl;
+        Control_acceleration = (int)((control_acc + 15)/0.1); //[-15,15] m/s^2
+        Control_pressure = (int)((brake_pressure)/0.01); // [0,1]MPa
+
+        //cout << "control_steer = " << control_steer << endl;
+        //cout << "Control is updating " << endl;
         //cout << "Control is updating" << "  Time is " << control_time << endl;
         usleep(SAMPLE_TIME);
     }
@@ -52,17 +56,17 @@ float Control::Caculate_steer(float lat_distance, float long_distance){
         frontwheel_steer_angle = 15;
     else if(frontwheel_steer_angle < -15)
         frontwheel_steer_angle = -15; // steer angle limit
-    cout << "Frontwheel_steer_angle = "<< to_string(frontwheel_steer_angle) << endl;
+    //cout << "Frontwheel_steer_angle = "<< to_string(frontwheel_steer_angle) << endl;
     float steer_wheel_angle = 24.1066 * frontwheel_steer_angle + 4.8505;// Caculate from steer map
     return steer_wheel_angle;
 }
 
 float Control::Caculate_acc(float v1, float v2, float a1, float long_distance){
     float control_acc;
-    control_acc = a1 + k_v * (v1 - v2) + k_d * long_distance;
+    control_acc = a1 + k_v * (v1 - v2) + k_d * (long_distance - EXPECTED_DISTANCE);
     //cout << "K_v = " << to_string(k_v) << " and K_d = " << to_string(k_d) << endl;
     if(control_acc > 0.2)
         control_acc = 0.2; // acc limit
-    cout << "Control_acceleration = "<< to_string(control_acc) << endl;
+    //cout << "Control_acceleration = "<< to_string(control_acc) << endl;
     return control_acc;
 }

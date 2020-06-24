@@ -8,6 +8,7 @@
 #endif //LEADERFOLLOWING_LEADER_FOLLOWING_H
 
 #define SAMPLE_TIME 2000000  //us
+#define EXPECTED_DISTANCE 10
 
 #include <thread>
 #include <cmath>
@@ -33,7 +34,7 @@ extern int Control_steer_enable;
 extern int Control_steer_angle;
 extern int Control_steer_velocity;
 
-extern int Control_model; // 0:No brake;1:acc respond;2:pressure respond; 3: drive respond;
+extern int Control_mode; // 0:No brake;1:acc respond;2:pressure respond; 3: drive respond;
 extern int Control_acceleration;
 extern int Control_pressure;
 
@@ -55,6 +56,7 @@ private:
     static float steer_wheel_angle;
     static float control_steer;
     static float control_acc;
+    static float brake_pressure;
     // vehicle parads
     static const int L = 5;
     static const int r = 1;

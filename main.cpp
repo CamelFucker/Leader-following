@@ -14,7 +14,7 @@ int Control_steer_angle = 32767 ;
 int Control_steer_enable = 0 ;
 int Control_steer_velocity = 56 ;
 
-int Control_model = 2;
+int Control_mode = 2;
 int Control_acceleration = 0;
 int Control_pressure = 0.5;
 
