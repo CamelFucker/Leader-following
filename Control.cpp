@@ -6,6 +6,9 @@ using namespace std;
 
 void Control::Control_update(){
     for(;;){
+
+        Control_steer_enable = 1;//TODO:when to start enable
+
         // Record time
         /*time_t control_time;
         control_time = time(NULL);*/
@@ -33,9 +36,9 @@ void Control::Control_update(){
         control_acc = Control::Caculate_acc(leader_velocity,follower_velocity,leader_acceleration,long_distance);
 
         // convert from float to int
-
-        Control_steer_angle = (int)control_steer;
+        Control_steer_angle = (int)((control_steer + 3276.7)/0.1); // Signal value = (physical value - offset)/precision value
         Control_acceleration = (int)control_acc;
+        cout << "control_steer = " << control_steer << endl;
         cout << "Control is updating " << endl;
         //cout << "Control is updating" << "  Time is " << control_time << endl;
         usleep(SAMPLE_TIME);
@@ -49,7 +52,7 @@ float Control::Caculate_steer(float lat_distance, float long_distance){
         frontwheel_steer_angle = 15;
     else if(frontwheel_steer_angle < -15)
         frontwheel_steer_angle = -15; // steer angle limit
-    cout << "Control_steer_angle = "<< to_string(frontwheel_steer_angle) << endl;
+    cout << "Frontwheel_steer_angle = "<< to_string(frontwheel_steer_angle) << endl;
     float steer_wheel_angle = 24.1066 * frontwheel_steer_angle + 4.8505;// Caculate from steer map
     return steer_wheel_angle;
 }

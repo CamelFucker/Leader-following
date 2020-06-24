@@ -22,13 +22,28 @@ class Communication{
 public:
     static void CAN1_update();
     static void CAN2_update();
-    void CAN_send(int message);
+    static void CAN_send(int *message_ptr,int msg_length,int id);
     //void CAN_recive();
 private:
-    int socket_word;
-    int nbytes;
-    struct sockaddr_can addr;
-    struct ifreq ifr;
-    struct can_frame frame[2];
+    //CAN_send func
+    static int socket_word;
+    static int nbytes;
+    static struct sockaddr_can addr;
+    static struct ifreq ifr;
+    static struct can_frame frame[2];
+    //CAN_steer_msg
+    static int * Con2CAN_steer(int steer_enable,int steer_angle,int steer_velocity);
+    static const int CONTROL_STEER_DLC = 4;
+    static const int CONTROL_STEER_ID = 0x23;
+
+    //CAN_acc_msg
+    //static int * Con2CAN_acc(int )
+
+    //static int message[8];
+    //static int Con2CAN_steer(int steer_angle);
+    //static int * CANmsg_steer_ptr;
+    //static int CANmsg_steer[8];
+    //static int Con2CAN_acc();
+
 };
 

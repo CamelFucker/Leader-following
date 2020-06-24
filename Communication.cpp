@@ -11,14 +11,32 @@ void Communication::CAN1_update(){
         time_t can1_time;
         can1_time = time(NULL);
          */
+        //CAN1 Receive
         UWB_distance = 20;
         UWB_fangwei = 0;
         UWB_zitai = 0;
         Leader_velocity = 0;
         Leader_acceleration = 0;
+
+        /*********Send steer message*********/
+        //CAN message convertion
+        static int * CANmsg_steer_ptr;
+        static int CANmsg_steer[CONTROL_STEER_DLC];
+        // get ptr
+        CANmsg_steer_ptr = Con2CAN_steer(Control_steer_enable,Control_steer_angle,Control_steer_velocity);
+        for(int i=0; i<CONTROL_STEER_DLC; i++) {
+            CANmsg_steer[i] = *(CANmsg_steer_ptr + i);
+            cout << hex << CANmsg_steer[i] << " ";
+        }
+        cout << endl;
+        Communication::CAN_send(CANmsg_steer,CONTROL_STEER_DLC,CONTROL_STEER_ID);
+        /**************************************/
+
+        //Send ... message
+
         usleep(SAMPLE_TIME);
         cout << "CAN1 data is updating..." << endl;
-        //cout << "CAN1 data is updating..." << "  Time is " << can1_time << endl;
+        //cout << "CAN1 data is updating..." << "  Time is " << can1_time << endl;  //show time
     }
 }
 
@@ -36,8 +54,10 @@ void Communication::CAN2_update(){
     }
 }
 
-void Communication::CAN_send(int message){
+void Communication::CAN_send(int *message_ptr,int msg_length,int id){
     cout << "Sending..." << endl;
+
+    //CAN send configuration
     int socket_word,nbytes;
     struct sockaddr_can addr;
     struct ifreq ifr;
@@ -50,32 +70,41 @@ void Communication::CAN_send(int message){
     addr.can_ifindex = ifr.ifr_ifindex;
     bind(socket_word,(struct sockaddr *)&addr,sizeof(addr));
     setsockopt(socket_word,SOL_CAN_RAW,CAN_RAW_FILTER,NULL,0);
-    //TODO:Convert int message to CAN message
 
+    //CAN Information
 
-    frame[0].can_id = 0x11;//CAN ID
-    frame[0].can_dlc = 8;//Message Length
+    frame[0].can_id = id;//CAN ID NOTICE:the input should map to HEX
+    frame[0].can_dlc = msg_length;//Message Length
     //CAN message
-    frame[0].data[0] = 0x01;//Low
-    frame[0].data[1] = 0x02;
-    frame[0].data[2] = 0x03;
-    frame[0].data[3] = 0x04;
-    frame[0].data[4] = 0x05;
-    frame[0].data[5] = 0x06;
-    frame[0].data[6] = 0x07;
-    frame[0].data[7] = 0x08;//High
+    for(int i=0;i<msg_length;i++)
+        frame[0].data[i] = *(message_ptr+i);
 
+    //TODO:check which is high or low
+    //Send CAN message
     nbytes = write(socket_word,&frame[0],sizeof(frame[0]));
-
+    // Print CAN message or error
     if(nbytes != sizeof(frame[0])){
         cout << "CAN Send Error" << endl;
     }
     else{
-        for (int byte=7; byte>-1; byte--)
+        /*
+        for (int byte=0; byte<8; byte++)
             cout << hex << to_string(frame[0].data[byte]) << " ";
         cout << endl;
+         */
     };
     close(socket_word);
+}
+
+//Communication::Con2CAN_steer(int steer_angle) //TODO:No velocity input model
+
+int * Communication::Con2CAN_steer(int steer_enable,int steer_angle,int steer_velocity){
+    static int msg_steer[CONTROL_STEER_DLC] = {0,0,0,0};
+    msg_steer[0] = steer_enable;
+    msg_steer[1] = steer_velocity/4;
+    msg_steer[2] = steer_angle/256;
+    msg_steer[3] = steer_angle%256;
+    return msg_steer;
 }
 
 //void Communication::CAN_recieve(){

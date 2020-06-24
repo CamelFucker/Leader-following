@@ -28,8 +28,14 @@ extern int Leader_velocity;
 extern int Leader_acceleration;
 extern int Follower_velocity;
 extern int Follower_acceleration;
+
+extern int Control_steer_enable;
 extern int Control_steer_angle;
+extern int Control_steer_velocity;
+
+extern int Control_model; // 0:No brake;1:acc respond;2:pressure respond; 3: drive respond;
 extern int Control_acceleration;
+extern int Control_pressure;
 
 
 class Control{
