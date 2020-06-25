@@ -5,81 +5,33 @@
 
 using namespace std;
 
-void Communication::CAN1_update(){
+void Communication::CAN0_update(){
     for(;;){
-        /*
-        time_t can1_time;
-        can1_time = time(NULL);
-         */
-
-        //CAN Receive
-        //CAN2Val_acc(CAN_receive(17,1),4);
-        CAN2Val_UWB(CAN_receive(0x650,1),8);
-
-        //CAN Send
-        /**********Send steer message***********/
-        //CAN message convertion
-        static int * CANmsg_steer_ptr;
-        static int CANmsg_steer[CONTROL_STEER_DLC];
-        // get ptr
-        CANmsg_steer_ptr = Con2CAN_steer(Control_steer_enable,Control_steer_angle,Control_steer_velocity);
-        cout << "CANmsg_steer: ";
-        for(int i=0; i<CONTROL_STEER_DLC; i++) {
-            CANmsg_steer[i] = *(CANmsg_steer_ptr + i);
-            cout << hex << CANmsg_steer[i] << " ";
-        }
-        cout << endl;
-        Communication::CAN_send(CANmsg_steer,CONTROL_STEER_DLC,CONTROL_STEER_ID,1,0);
-        /**************************************/
-
-        /**********Send acc message***********/
-        //CAN message convertion
-        static int * CANmsg_acc_ptr;
-        static int CANmsg_acc[CONTROL_ACC_DLC];
-        // get ptr
-        CANmsg_acc_ptr = Con2CAN_acc(Control_mode,Control_acceleration,Control_pressure);
-        cout << "CANmsg_acc: ";
-        for(int i=0; i<CONTROL_ACC_DLC; i++) {
-            CANmsg_acc[i] = *(CANmsg_acc_ptr + i);
-            cout << hex << CANmsg_acc[i] << " ";
-        }
-        cout << endl;
-        Communication::CAN_send(CANmsg_acc,CONTROL_ACC_DLC,CONTROL_ACC_ID,0,0);
-        /**************************************/
-
+        Communication::CAN_send(Con2CAN_steer(Control_steer_enable,Control_steer_angle,Control_steer_velocity),
+                CONTROL_STEER_MSG);
+        Communication::CAN_send(Con2CAN_acc(Control_mode,Control_acceleration,Control_pressure),
+                CONTROL_ACC_MSG);
         usleep(SAMPLE_TIME);
-        cout << "CAN1 data is updating..." << endl;
-        //cout << "CAN1 data is updating..." << "  Time is " << can1_time << endl;  //show time
+        //cout << "CAN1 data is updating..." << endl;
     }
 }
+//Send all messages
 
-void Communication::CAN2_update(){
-    for(;;){
-        /*
-        time_t can2_time;
-        can2_time = time(NULL);
-         */
-        Follower_velocity = 0;
-        Follower_acceleration = 0;
-        usleep(SAMPLE_TIME);
-        cout << "CAN2 data is updating..." << endl;
-        //cout << "CAN2 data is updating..." << "  Time is " << can2_time << endl;
-    }
-}
-
-void Communication::CAN_send(int *message_ptr,int msg_length,int id,bool EFF, int CAN_channel = 0){
-    cout << "Sending..." << endl;
+void Communication::CAN_send(int *message_ptr,int id,int msg_length,bool EFF, int CAN_channel){
+    //cout << "Sending..." << endl;
 
     /***********************Sockek_CAN config*****************************/
-
     //CAN send configuration
     int socket_word,nbytes;
     struct sockaddr_can addr;
     struct ifreq ifr;
     struct can_frame frame[2] = {{0}};
     socket_word = socket(PF_CAN,SOCK_RAW,CAN_RAW);
-    std::string can_str = "can";
-    strcpy(ifr.ifr_name,"can0");
+
+    if(CAN_channel == 0)
+        strcpy(ifr.ifr_name,"can0");
+    else if(CAN_channel == 1)
+        strcpy(ifr.ifr_name,"can1");
 
     ioctl(socket_word,SIOCGIFINDEX,&ifr);
     addr.can_family =  AF_CAN;
@@ -104,20 +56,42 @@ void Communication::CAN_send(int *message_ptr,int msg_length,int id,bool EFF, in
     nbytes = write(socket_word,&frame[0],sizeof(frame[0]));
     // Print CAN message or error
     if(nbytes != sizeof(frame[0])){
-        cout << "CAN Send Error" << endl;
+        cout << "CAN Send Error! Check bitrate. " << endl;
     }
     else{
-        /*
-        for (int byte=0; byte<8; byte++)
-            cout << hex << to_string(frame[0].data[byte]) << " ";
+        cout << "Sending: ";
+        if(id == CONTROL_STEER_ID)
+            cout << "(control steer)";
+        else if(id == CONTROL_ACC_ID)
+            cout << "(control acc)";
+        cout << " CAN ID 0x" << hex << id << " : ";
+        for(int i=0; i< msg_length; i++) {
+            //CANmsg_acc[i] = *(CANmsg_acc_ptr + i);
+            cout << hex << message_ptr[i] << " ";
+        }
         cout << endl;
-         */
     };
     close(socket_word);
 }
+//Send a certain ID CANmsg
 
-int * Communication::CAN_receive(int id, bool EFF){
-    cout << "Receiving ID " << id << " ..." << endl;
+void Communication::CAN_receive(int id,int msg_length,bool EFF,int CAN_channel){
+    for(;;){
+        if(id == VEHICLE_ACC_ID)
+            CAN2Val_acc(CAN_get_msg(id,EFF,CAN_channel),msg_length);
+        else if(id == VEHICLE_SPEED_ID)
+            CAN2Val_speed(CAN_get_msg(id,EFF,CAN_channel),msg_length);
+        else if(id == UWB_POSITION_ID)
+            CAN2Val_UWB_position(CAN_get_msg(id,EFF,CAN_channel),msg_length);
+        else if(id == UWB_LEADERSTATE_ID)
+            CAN2Val_UWB_leaderstate(CAN_get_msg(id,EFF,CAN_channel),msg_length);
+    }
+
+}
+//Receive a certain ID CANmsg
+
+int * Communication::CAN_get_msg(int id, bool EFF, int CAN_channel){
+    //cout << "Receiving ID " << id << " ..." << endl;
 
     /***********************Sockek_CAN config*****************************/
     static int socket_word, nbytes;
@@ -125,14 +99,19 @@ int * Communication::CAN_receive(int id, bool EFF){
     static struct ifreq ifr;
     static struct can_frame frame;
     static struct can_filter rfliter[1];
-    socket_word = socket(PF_CAN, SOCK_RAW, CAN_RAW); //创建套接字
-    strcpy(ifr.ifr_name, "can0" );
-    ioctl(socket_word, SIOCGIFINDEX, &ifr); //指定 can0 设备
+    socket_word = socket(PF_CAN, SOCK_RAW, CAN_RAW);
+
+    //Choose CAN channel
+    if(CAN_channel == 0)
+        strcpy(ifr.ifr_name, "can0" );
+    else if(CAN_channel == 1)
+        strcpy(ifr.ifr_name, "can1");
+
+    ioctl(socket_word, SIOCGIFINDEX, &ifr);
     addr.can_family = AF_CAN;
     addr.can_ifindex = ifr.ifr_ifindex;
     struct can_filter rfilter[1];
-    bind(socket_word, (struct sockaddr *)&addr, sizeof(addr)); //将套接字与 can0 绑定
-    cout << ">>" << endl;
+    bind(socket_word, (struct sockaddr *)&addr, sizeof(addr));
     //定义接收规则，只接收表示符等于 id 的报文
     rfilter[0].can_id = id;
     if(EFF)
@@ -147,8 +126,18 @@ int * Communication::CAN_receive(int id, bool EFF){
         //cout << "Receiving..." << endl;
     }
     /**********************************************************************/
-    cout << "**********************" << endl;
+    //cout << "**********************" << endl;
     // Convert CANmsg to int ptr
+    cout << "Receiving: ";
+    if(id == VEHICLE_ACC_ID)
+        cout << "(vehicle acc)";
+    else if(id == VEHICLE_SPEED_ID)
+        cout << "(vehicle speed)";
+    else if(id == UWB_POSITION_ID)
+        cout << "(UWB position)";
+    else if(id == UWB_LEADERSTATE_ID)
+        cout << "(UWB leader state)";
+    cout << " CAN ID 0x" << hex << id << ": ";
     static int CAN_msg[8] = {0};
     for (int i=0;i<8;i++){
         CAN_msg[i] = (int)frame.data[i];
@@ -159,56 +148,37 @@ int * Communication::CAN_receive(int id, bool EFF){
     close(socket_word);
     return CAN_msg;
 
-}//Receive CANmsg
+}
+//get CAN message
 
-void Communication::CAN2Val_acc(int *message_ptr,int msg_length){
-    int CANmsg_acc[msg_length] = {0};
-    for(int i=0;i<msg_length;i++){
-        CANmsg_acc[i] = int(*(message_ptr + i));
-        cout << CANmsg_acc[i] << " ";
+/*
+void Communication::CAN1_update(){
+    for(;;){
+        time_t can2_time;
+        can2_time = time(NULL);
+        Follower_velocity = 0;
+        Follower_acceleration = 0;
+        usleep(SAMPLE_TIME);
+        cout << "CAN2 data is updating..." << endl;
+        //cout << "CAN2 data is updating..." << "  Time is " << can2_time << endl;
     }
-    cout << endl;
-    Leader_acceleration = CANmsg_acc[0] + CANmsg_acc[1];//TODO:resolution
-}//Convert CANmsg to velocity value
+}
+*/
+// CAN1 update
 
-void Communication::CAN2Val_UWB(int*message_ptr,int msg_length){
-    int CANmsg_UWB[msg_length] = {0};
-    for(int i=0;i<msg_length;i++){
-        CANmsg_UWB[i] = *(message_ptr + i);
-    }
-    cout << "hhh" << endl;
-    UWB_distance = 256 * CANmsg_UWB[3] + CANmsg_UWB[2];
-    if (CANmsg_UWB[5] >= 0x80)
-    {
-        UWB_fangwei = 256 * CANmsg_UWB[5] + CANmsg_UWB[4] - 65536;
-    }
-    else {
-        UWB_fangwei = 256 * CANmsg_UWB[5] + CANmsg_UWB[4];
-    }
-    if (CANmsg_UWB[7] >= 0x80)
-    {
-        UWB_zitai = 256 * CANmsg_UWB[7] + CANmsg_UWB[6] - 65536;
-    }
-    else {
-        UWB_zitai = 256 * CANmsg_UWB[7] + CANmsg_UWB[6];
-    }
-
-}//TODO: CAN_msg2Value  UWB framework demo
-
-//UWB
-//Communication::Con2CAN_steer(int steer_angle)
-
+/********************************Convert value to CAN message************************************/
 int * Communication::Con2CAN_steer(int steer_enable,int steer_angle,int steer_velocity){
-    static int msg_steer[CONTROL_STEER_DLC] = {0};
+    static int msg_steer[8] = {0};
     msg_steer[0] = steer_enable;
     msg_steer[1] = steer_velocity/4;
     msg_steer[2] = steer_angle%256;//TODO:H L error
     msg_steer[3] = steer_angle/256;
     return msg_steer;
 }
+//Convert steer information to CANmsg
 
 int * Communication::Con2CAN_acc(int control_mode,int acc_value, int pressure_value){
-    static int msg_acc[CONTROL_ACC_DLC] = {0};
+    static int msg_acc[8] = {0};
     static int loop_number = 0;
     msg_acc[2] = control_mode;
     if(control_mode==0){//mode 0:No Brake
@@ -231,4 +201,43 @@ int * Communication::Con2CAN_acc(int control_mode,int acc_value, int pressure_va
     loop_number ++;
     return msg_acc;
 }
+//Convert acc information to CANmsg
+/************************************************************************************************/
 
+/********************************Convert CAN message to value************************************/
+void Communication::CAN2Val_acc(int *CANmsg_acc,int msg_length){
+    Follower_acceleration = CANmsg_acc[0] + CANmsg_acc[1];//TODO:resolution
+}
+//Convert CANmsg to follower acc value
+
+void Communication::CAN2Val_UWB_position(int*CANmsg_UWB,int msg_length){
+    //cout << "UWB_position" << endl;
+    UWB_distance = 256 * CANmsg_UWB[3] + CANmsg_UWB[2];
+    if (CANmsg_UWB[5] >= 0x80)
+    {
+        UWB_fangwei = 256 * CANmsg_UWB[5] + CANmsg_UWB[4] - 65536;
+    }
+    else {
+        UWB_fangwei = 256 * CANmsg_UWB[5] + CANmsg_UWB[4];
+    }
+    if (CANmsg_UWB[7] >= 0x80)
+    {
+        UWB_zitai = 256 * CANmsg_UWB[7] + CANmsg_UWB[6] - 65536;
+    }
+    else {
+        UWB_zitai = 256 * CANmsg_UWB[7] + CANmsg_UWB[6];
+    }
+
+}
+//Convrt CANmsg to UWB position value
+
+void Communication::CAN2Val_UWB_leaderstate(int*CANmsg_UWB_state,int msg_length){
+    //CANmsg_UWB_state[8] TODO: convert CAN message to value
+}
+//Convert CANmsg to leader state value
+
+void Communication::CAN2Val_speed(int*CANmsg_speed,int msg_length){
+    Follower_velocity = CANmsg_speed[6] + CANmsg_speed[7] * 256;
+}
+//Convert CANmsg to follower speed
+/************************************************************************************************/

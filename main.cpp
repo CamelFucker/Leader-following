@@ -26,11 +26,11 @@ int main()
     Communication follower_communication;
     Control follower_control;
 
-    thread th1(&follower_communication.CAN1_receive);//receive UWB position (args:ID CANchannel)
-    thread th2(&follower_communication.CAN2_receive);//receive UWB leader_state
-    thread th3(&follower_communication.CAN_receive);//receive follower acc
+    thread th1(&follower_communication.CAN_receive,UWB_POSITION_MSG);//receive UWB position (args:ID CANchannel)
+    thread th2(&follower_communication.CAN_receive,UWB_LEADERSTATE_MSG);//receive UWB leader_state
+    thread th3(&follower_communication.CAN_receive,VEHICLE_SPEED_MSG);//receive follower speed
     thread th4(&follower_control.Control_update);//control signal update
-    thread th5(&follower_communication.CAN_update());//send control signals
+    thread th5(&follower_communication.CAN0_update);//send control signals
 
     th1.join();
     th2.join();
@@ -42,7 +42,7 @@ int main()
     int * canmsg;
     while(1)
     {
-        canmsg = follower_communication.CAN_receive(23);
+        canmsg = follower_communication.CAN_get_msg(23);
         cout << "Leader_acceleration = " << Leader_acceleration << endl;
         follower_communication.CAN2Val_acc(canmsg,4);
         usleep(SAMPLE_TIME);

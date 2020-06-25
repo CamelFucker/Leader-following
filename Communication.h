@@ -8,8 +8,28 @@
 #endif //LEADERFOLLOWING_COMMUNICATION_H
 
 #define CAN_EFF_FLAG 0x80000000U //Extended Frame Mark
-
 #define CAN_EFF_MASK 0x1FFFFFFFU //Extended Frame format
+//CAN receive
+// MSG=(ID,dlc,EFF,CAN_channel)
+#define UWB_POSITION_ID 0x650
+#define UWB_POSITION_MSG UWB_POSITION_ID,8,1,0
+#define UWB_LEADERSTATE_ID 0x10
+#define UWB_LEADERSTATE_MSG UWB_LEADERSTATE_ID,8,1,0
+#define VEHICLE_SPEED_ID 0x0cfe6c03
+#define VEHICLE_SPEED_MSG VEHICLE_SPEED_ID,8,1,1
+#define VEHICLE_ACC_ID 0x45
+#define VEHICLE_ACC_MSG VEHICLE_ACC_ID,8,1,0
+
+//CAN send
+#define CONTROL_STEER_ID 0x4ef8480
+#define CONTROL_STEER_MSG CONTROL_STEER_ID,4,1,0
+#define CONTROL_ACC_ID 0xc040b2a
+#define CONTROL_ACC_MSG CONTROL_ACC_ID,8,1,0
+
+
+
+
+//TODO:Vehicle speed id is?
 
 #include <stdio.h>
 #include <stdlib.h>
@@ -25,10 +45,12 @@
 
 class Communication{
 public:
-    static void CAN1_update();
-    static void CAN2_update();
-    static void CAN_send(int *message_ptr,int msg_length,int id,bool EFF, int CAN_channel);
-    static int * CAN_receive(int id,bool EFF);
+    static void CAN0_update(); //send all signals
+    //static void CAN1_update();
+
+    static void CAN_send(int *message_ptr,int id,int msg_length,bool EFF, int CAN_channel);
+    static void CAN_receive(int id,int msg_length,bool EFF,int CAN_channel);
+    static int * CAN_get_msg(int id,bool EFF,int CAN_channel);
 
 private:
     //CAN_send func
@@ -39,18 +61,13 @@ private:
     static struct can_frame frame[2];
     //CAN_steer_msg
     static int * Con2CAN_steer(int steer_enable,int steer_angle,int steer_velocity);
-    static const int CONTROL_STEER_DLC = 4;
-    static const int CONTROL_STEER_ID = 0x23;
-
-    //CAN_acc_msg
     static int * Con2CAN_acc(int control_mode, int acc_value, int pressure_value);
-    static const int CONTROL_ACC_DLC = 8;
-    static const int CONTROL_ACC_ID = 0x33df;
 
     //CAN Receive
     static void CAN2Val_acc(int *message_ptr,int msg_length);
-    static void CAN2Val_UWB(int *message_ptr,int msg_length);
-
+    static void CAN2Val_UWB_position(int *message_ptr,int msg_length);
+    static void CAN2Val_UWB_leaderstate(int *message_ptr,int msg_length);
+    static void CAN2Val_speed(int *message_ptr,int msg_length);
 
 };
 
