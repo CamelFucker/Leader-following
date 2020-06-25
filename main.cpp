@@ -22,7 +22,7 @@ int main()
 {
     cout << "Main Thread" << endl;
 
-
+/*
     Communication follower_communication;
     Control follower_control;
 
@@ -32,7 +32,15 @@ int main()
     th1.join();
     th2.join();
     th3.join();
+*/
 
+    int * canmsg;
+    while(1)
+    {
+        canmsg = follower_communication.CAN_receive(23);
+        cout << *(canmsg) << " haha " << endl;
+        usleep(SAMPLE_TIME);
+    }
 
     /* CAN Send in main thread
     int test_message = 234;

@@ -30,7 +30,7 @@ void Communication::CAN1_update(){
             cout << hex << CANmsg_steer[i] << " ";
         }
         cout << endl;
-        Communication::CAN_send(CANmsg_steer,CONTROL_STEER_DLC,CONTROL_STEER_ID,0);
+        Communication::CAN_send(CANmsg_steer,CONTROL_STEER_DLC,CONTROL_STEER_ID,1);
         /**************************************/
 
         /**********Send acc message***********/
@@ -112,13 +112,78 @@ void Communication::CAN_send(int *message_ptr,int msg_length,int id,bool EFF){
     close(socket_word);
 }
 
-//Communication::Con2CAN_steer(int steer_angle) //TODO:No velocity input model
+int * Communication::CAN_receive(int id){
+    cout << "Receiving ID " << id << " ..." << endl;
+
+    static int * CAN_msg_ptr;
+
+    static int socket_word, nbytes;
+    static struct sockaddr_can addr;
+    static struct ifreq ifr;
+    static struct can_frame frame;
+
+    static struct can_filter rfliter[1];
+
+    socket_word = socket(PF_CAN, SOCK_RAW, CAN_RAW); //创建套接字
+    strcpy(ifr.ifr_name, "can0" );
+    ioctl(socket_word, SIOCGIFINDEX, &ifr); //指定 can0 设备
+    addr.can_family = AF_CAN;
+    addr.can_ifindex = ifr.ifr_ifindex;
+    struct can_filter rfilter[1];
+    bind(socket_word, (struct sockaddr *)&addr, sizeof(addr)); //将套接字与 can0 绑定
+    cout << ">>" << endl;
+    //定义接收规则，只接收表示符等于 0x11 的报文
+    rfilter[0].can_id = 0x11;
+    rfilter[0].can_mask = CAN_SFF_MASK;
+    //设置过滤规则
+    setsockopt(socket_word, SOL_CAN_RAW, CAN_RAW_FILTER, &rfilter, sizeof(rfilter));
+    //setsockopt(socket_word,SOL_CAN_RAW,CAN_RAW_FILTER,NULL,0);
+    cout << "<<<<<" << endl;
+    int len;
+    size_t size = 0;
+
+    nbytes = read(socket_word, &frame, sizeof(frame));
+    //nbytes = re(socket_word, &frame, sizeof(frame),0,(struct sockaddr *)&addr, (socklen_t *)&len);
+    cout << "<<<<<" << endl;
+
+    if(nbytes > 0)
+    {
+        cout << "ID " << id << "message is " << frame.data[0] << endl;
+    }
+
+    cout << " hh" << endl;
+    close(socket_word);
+    int can_msg[4] = {0};
+    CAN_msg_ptr = can_msg;
+    return CAN_msg_ptr;
+}//Output CANmsg
+
+void Communication::CAN2Val_acc(int *message_ptr,int msg_length){
+    static int CANmsg_acc[msg_length] = 0;
+    for(int i=0;i<msg_length;i++){
+        CANmsg_acc[i] = *(message_ptr + i);
+    }
+    Leader_acceleration = ;
+}//Output velocity value
+
+void Communication::CAN2Val_UWB(int*message_ptr,int msg_length){
+    static int CANmsg_UWB[msg_length] = 0;
+    for(int i=0;i<msg_length;i++){
+        CANmsg_UWB[i] = *(message_ptr + i);
+    }
+    UWB_distance = ;
+    UWB_fangwei = ;
+    UWB_zitai = ;
+}//TODO: CAN_msg2Value  UWB framework demo
+
+
+//Communication::Con2CAN_steer(int steer_angle)
 
 int * Communication::Con2CAN_steer(int steer_enable,int steer_angle,int steer_velocity){
     static int msg_steer[CONTROL_STEER_DLC] = {0};
     msg_steer[0] = steer_enable;
     msg_steer[1] = steer_velocity/4;
-    msg_steer[2] = steer_angle/256;
+    msg_steer[2] = steer_angle/256;//TODO:H L error
     msg_steer[3] = steer_angle%256;
     return msg_steer;
 }

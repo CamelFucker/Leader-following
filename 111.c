@@ -13,13 +13,16 @@
  struct sockaddr_can addr;
  struct ifreq ifr;
  struct can_frame frame;
+
  struct can_filter rfilter[1];
+
  s = socket(PF_CAN, SOCK_RAW, CAN_RAW); //创建套接字
  strcpy(ifr.ifr_name, "can0" );
  ioctl(s, SIOCGIFINDEX, &ifr); //指定 can0 设备
  addr.can_family = AF_CAN;
  addr.can_ifindex = ifr.ifr_ifindex;
  bind(s, (struct sockaddr *)&addr, sizeof(addr)); //将套接字与 can0 绑定
+
  //定义接收规则，只接收表示符等于 0x11 的报文
  rfilter[0].can_id = 0x11;
  rfilter[0].can_mask = CAN_SFF_MASK;

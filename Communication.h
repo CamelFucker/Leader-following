@@ -25,7 +25,7 @@ public:
     static void CAN1_update();
     static void CAN2_update();
     static void CAN_send(int *message_ptr,int msg_length,int id,bool EFF);
-    //void CAN_recive();
+    static int * CAN_receive(int id);
 private:
     //CAN_send func
     static int socket_word;
@@ -41,7 +41,7 @@ private:
     //CAN_acc_msg
     static int * Con2CAN_acc(int control_mode, int acc_value, int pressure_value);
     static const int CONTROL_ACC_DLC = 8;
-    static const int CONTROL_ACC_ID = 0x33;
+    static const int CONTROL_ACC_ID = 0x33df;
 
     //static int message[8];
     //static int Con2CAN_steer(int steer_angle);
