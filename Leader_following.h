@@ -16,6 +16,7 @@
 #include <curses.h>
 #include <stdio.h>
 #include <ctime>
+#include <typeinfo>
 
 #include "Communication.h"
 

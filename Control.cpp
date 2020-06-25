@@ -6,6 +6,9 @@ using namespace std;
 
 void Control::Control_update(){
     for(;;){
+        cout << "UWB_distance = " << dec << UWB_distance << endl;
+        cout << "UWB_fangwei = " << dec << UWB_fangwei  << endl;
+        cout << "UWB_zitai = " << dec << UWB_zitai << endl;
 
         Control_steer_enable = 1;//TODO:when to start enable
 

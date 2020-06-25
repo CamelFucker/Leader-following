@@ -27,6 +27,12 @@ iostream
 -
 string.h
 -
+string
+-
+
+/home/nvidia/CLionProjects/leaderfollowing/Control.cpp
+Leader_following.h
+/home/nvidia/CLionProjects/leaderfollowing/Leader_following.h
 
 /home/nvidia/CLionProjects/leaderfollowing/Leader_following.h
 thread
@@ -41,10 +47,8 @@ stdio.h
 -
 ctime
 -
+typeinfo
+-
 Communication.h
 /home/nvidia/CLionProjects/leaderfollowing/Communication.h
-
-/home/nvidia/CLionProjects/leaderfollowing/main.cpp
-Leader_following.h
-/home/nvidia/CLionProjects/leaderfollowing/Leader_following.h
 
