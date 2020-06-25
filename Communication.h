@@ -17,8 +17,9 @@
 #define UWB_LEADERSTATE_MSG UWB_LEADERSTATE_ID,8,1,0
 #define VEHICLE_SPEED_ID 0x0cfe6c03
 #define VEHICLE_SPEED_MSG VEHICLE_SPEED_ID,8,1,1
-#define VEHICLE_ACC_ID 0x45
+#define VEHICLE_ACC_ID 0x18f02505
 #define VEHICLE_ACC_MSG VEHICLE_ACC_ID,8,1,0
+//TODO:Check whether acc id is right
 
 //CAN send
 #define CONTROL_STEER_ID 0x4ef8480
@@ -27,9 +28,6 @@
 #define CONTROL_ACC_MSG CONTROL_ACC_ID,8,1,0
 
 
-
-
-//TODO:Vehicle speed id is?
 
 #include <stdio.h>
 #include <stdlib.h>

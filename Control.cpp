@@ -6,11 +6,11 @@ using namespace std;
 
 void Control::Control_update(){
     for(;;){
-        /*
+
         cout << "UWB_distance = " << dec << UWB_distance << endl;
         cout << "UWB_fangwei = " << dec << UWB_fangwei  << endl;
         cout << "UWB_zitai = " << dec << UWB_zitai << endl;
-        */
+
 
         Control_steer_enable = 1;//TODO:when to start enable
 
@@ -19,12 +19,16 @@ void Control::Control_update(){
         control_time = time(NULL);*/
 
         // convert from int to float
-        float leader_wheel_speed = static_cast<int>(Leader_velocity);
-        float follower_wheel_speed = static_cast<int>(Follower_velocity);
-        float leader_acceleration = static_cast<int>(Leader_acceleration);
-        float distance = static_cast<int>(UWB_distance);
-        float fangwei_angle = static_cast<int>(UWB_fangwei);
-        float zitai_angle = static_cast<int>(UWB_zitai);
+        float leader_wheel_speed = (float)(Leader_velocity);
+        float follower_wheel_speed = (float)(Follower_velocity);
+        float leader_acceleration = (float)(Leader_acceleration);
+        float distance = (float)(UWB_distance)/100.0; // m
+        float fangwei_angle = (float)(UWB_fangwei)/1.0; //degree
+        float zitai_angle = (float)(UWB_zitai)/1.0; // degree
+
+        cout << "distance = " << distance << endl;
+        cout << "fangwei_angle = " << fangwei_angle << endl;
+        cout << "zitai_angle = " << zitai_angle << endl;
 
         // Caculate middle variables
         float leader_velocity;
@@ -75,3 +79,8 @@ float Control::Caculate_acc(float v1, float v2, float a1, float long_distance){
     //cout << "Control_acceleration = "<< to_string(control_acc) << endl;
     return control_acc;
 }
+
+//TODO LIST
+//TODO:acc analysis and physical value caculation
+//TODO:STATEMECHINE
+//TODO:HOW TO MAKE DATASET

@@ -17,6 +17,22 @@ void Communication::CAN0_update(){
 }
 //Send all messages
 
+void Communication::CAN_receive(int id,int msg_length,bool EFF,int CAN_channel){
+    for(;;){
+        if(id == VEHICLE_ACC_ID)
+            CAN2Val_acc(CAN_get_msg(id,EFF,CAN_channel),msg_length);
+        else if(id == VEHICLE_SPEED_ID)
+            CAN2Val_speed(CAN_get_msg(id,EFF,CAN_channel),msg_length);
+        else if(id == UWB_POSITION_ID)
+            CAN2Val_UWB_position(CAN_get_msg(id,EFF,CAN_channel),msg_length);
+        else if(id == UWB_LEADERSTATE_ID)
+            CAN2Val_UWB_leaderstate(CAN_get_msg(id,EFF,CAN_channel),msg_length);
+        usleep(SAMPLE_TIME);
+    }
+
+}
+//Receive a certain ID CANmsg
+
 void Communication::CAN_send(int *message_ptr,int id,int msg_length,bool EFF, int CAN_channel){
     //cout << "Sending..." << endl;
 
@@ -50,7 +66,7 @@ void Communication::CAN_send(int *message_ptr,int id,int msg_length,bool EFF, in
     //CAN message
     for(int i=0;i<msg_length;i++)
         frame[0].data[i] = *(message_ptr+i);
-    //TODO:check which is high or low
+
 
     //Send CAN message
     nbytes = write(socket_word,&frame[0],sizeof(frame[0]));
@@ -74,21 +90,6 @@ void Communication::CAN_send(int *message_ptr,int id,int msg_length,bool EFF, in
     close(socket_word);
 }
 //Send a certain ID CANmsg
-
-void Communication::CAN_receive(int id,int msg_length,bool EFF,int CAN_channel){
-    for(;;){
-        if(id == VEHICLE_ACC_ID)
-            CAN2Val_acc(CAN_get_msg(id,EFF,CAN_channel),msg_length);
-        else if(id == VEHICLE_SPEED_ID)
-            CAN2Val_speed(CAN_get_msg(id,EFF,CAN_channel),msg_length);
-        else if(id == UWB_POSITION_ID)
-            CAN2Val_UWB_position(CAN_get_msg(id,EFF,CAN_channel),msg_length);
-        else if(id == UWB_LEADERSTATE_ID)
-            CAN2Val_UWB_leaderstate(CAN_get_msg(id,EFF,CAN_channel),msg_length);
-    }
-
-}
-//Receive a certain ID CANmsg
 
 int * Communication::CAN_get_msg(int id, bool EFF, int CAN_channel){
     //cout << "Receiving ID " << id << " ..." << endl;
@@ -171,7 +172,7 @@ int * Communication::Con2CAN_steer(int steer_enable,int steer_angle,int steer_ve
     static int msg_steer[8] = {0};
     msg_steer[0] = steer_enable;
     msg_steer[1] = steer_velocity/4;
-    msg_steer[2] = steer_angle%256;//TODO:H L error
+    msg_steer[2] = steer_angle%256;
     msg_steer[3] = steer_angle/256;
     return msg_steer;
 }
