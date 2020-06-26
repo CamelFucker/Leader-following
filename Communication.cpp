@@ -19,17 +19,23 @@ void Communication::CAN0_update(){
 
 void Communication::CAN_receive(int id,int msg_length,bool EFF,int CAN_channel){
     for(;;){
-        if(id == VEHICLE_ACC_ID)
+        if(id == VEHICLE_ACC_ID){
             CAN2Val_acc(CAN_get_msg(id,EFF,CAN_channel),msg_length);
-        else if(id == VEHICLE_SPEED_ID)
+            usleep(SAMPLE_TIME);
+        }
+        else if(id == VEHICLE_SPEED_ID){
             CAN2Val_speed(CAN_get_msg(id,EFF,CAN_channel),msg_length);
-        else if(id == UWB_POSITION_ID)
+            usleep(SAMPLE_TIME);
+        }
+        else if(id == UWB_POSITION_ID){
             CAN2Val_UWB_position(CAN_get_msg(id,EFF,CAN_channel),msg_length);
-        else if(id == UWB_LEADERSTATE_ID)
+            usleep(SAMPLE_TIME);
+        }
+        else if(id == UWB_LEADERSTATE_ID){
             CAN2Val_UWB_leaderstate(CAN_get_msg(id,EFF,CAN_channel),msg_length);
-        usleep(SAMPLE_TIME);
+            //usleep(SAMPLE_TIME/16);
+        }
     }
-
 }
 //Receive a certain ID CANmsg
 
@@ -207,7 +213,7 @@ int * Communication::Con2CAN_acc(int control_mode,int acc_value, int pressure_va
 
 /********************************Convert CAN message to value************************************/
 void Communication::CAN2Val_acc(int *CANmsg_acc,int msg_length){
-    Follower_acceleration = CANmsg_acc[0] + CANmsg_acc[1] * 256;
+    Follower_La_acc = CANmsg_acc[0] + CANmsg_acc[1] * 256;
 }
 //Convert CANmsg to follower acc value
 
@@ -232,13 +238,77 @@ void Communication::CAN2Val_UWB_position(int*CANmsg_UWB,int msg_length){
 }
 //Convrt CANmsg to UWB position value
 
-void Communication::CAN2Val_UWB_leaderstate(int*CANmsg_UWB_state,int msg_length){
+void Communication::CAN2Val_UWB_leaderstate(int*msg,int msg_length){
+    if(msg[0] == 0xA1)
+        CAN2Val_acc_pedal(msg,msg_length);
+    else if(msg[0] == 0xA2)
+        CAN2Val_brake(msg,msg_length);
+    else if(msg[0] == 0xA3)
+        CAN2Val_steering_wheel(msg,msg_length);
+    else if(msg[0] == 0xA4)
+        CAN2Val_wheel(msg,msg_length);
+    else if(msg[0] == 0xA5)
+        CAN2Val_la_yr(msg,msg_length);
+    else if(msg[0] == 0xA6)
+        CAN2Val_gear_position(msg,msg_length);
+    else if(msg[0] == 0xA7)
+        CAN2Val_pedal_angle(msg,msg_length);
     //CANmsg_UWB_state[8] TODO: convert CAN message to value
+
 }
 //Convert CANmsg to leader state value
 
 void Communication::CAN2Val_speed(int*CANmsg_speed,int msg_length){
-    Follower_velocity = CANmsg_speed[6] + CANmsg_speed[7] * 256;
+    Follower_Speed = CANmsg_speed[6] + CANmsg_speed[7] * 256;
 }
+
+void Communication::CAN2Val_acc_pedal(int*CANmsg_acc_pedal,int msg_length){
+    Leader_ACC_pedal_position = CANmsg_acc_pedal[1];
+    Leader_Remote_position = CANmsg_acc_pedal[4];
+    cout << "Leader_ACC_pedal_position = " << Leader_ACC_pedal_position << endl;
+}
+
+void Communication::CAN2Val_brake(int*CANmsg_brake,int msg_length){
+    Leader_Brake_pedal_position = CANmsg_brake[1];
+    if(CANmsg_brake[3] >= 0x80)
+        Leader_Actual_acc = (CANmsg_brake[3] * 256 + CANmsg_brake[2]) - 0xFFFF - 1;
+    else
+        Leader_Actual_acc = (CANmsg_brake[3] * 256 + CANmsg_brake[2]);
+    Leader_Speed = (CANmsg_brake[5] * 256 + CANmsg_brake[4]);
+    Leader_Pressure = CANmsg_brake[6];
+    cout << "Leader_Speed = " << Leader_Speed << endl;
+}
+
+void Communication::CAN2Val_steering_wheel(int*CANmsg_steering_wheel,int msg_length){
+    if(CANmsg_steering_wheel[2] >= 0x80)
+        Leader_Steering_wheel_angle = (CANmsg_steering_wheel[2] * 256 + CANmsg_steering_wheel[1]) - 0xFFFF - 1;
+    else
+        Leader_Steering_wheel_angle = (CANmsg_steering_wheel[2] * 256 + CANmsg_steering_wheel[1]);
+    Leader_Steering_wheel_speed = CANmsg_steering_wheel[3];
+    Leader_Steering_wheel_state = CANmsg_steering_wheel[4];
+    Leader_Count = CANmsg_steering_wheel[5];
+    Leader_Check = CANmsg_steering_wheel[7];
+}
+
+
+void Communication::CAN2Val_wheel(int*CANmsg_wheel_speed,int msg_length){
+    Leader_Wheel_speed = CANmsg_wheel_speed[3] * (256 * 256) + CANmsg_wheel_speed[2] * 256 + CANmsg_wheel_speed[1];
+}
+
+void Communication::CAN2Val_la_yr(int*CANmsg_la_yr,int msg_length){
+    Leader_La_acc = CANmsg_la_yr[1] + CANmsg_la_yr[2] * 256;
+    Leader_Yr_speed = CANmsg_la_yr[1] + CANmsg_la_yr[2] * 256;
+}
+
+void Communication::CAN2Val_gear_position(int*CANmsg_gear_position,int msg_length){
+    Leader_Target_gear = CANmsg_gear_position[1];
+    Leader_Current_gear = CANmsg_gear_position[5];
+}
+
+void Communication::CAN2Val_pedal_angle(int*CANmsg_pedal_angle,int msg_length){
+    Leader_Acc_pedal = CANmsg_pedal_angle[1] + CANmsg_pedal_angle[2] * 256;
+    Leader_Brake_pedal = CANmsg_pedal_angle[6] + CANmsg_pedal_angle[7] * 256;
+}
+
 //Convert CANmsg to follower speed
 /************************************************************************************************/

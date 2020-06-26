@@ -7,10 +7,9 @@ using namespace std;
 void Control::Control_update(){
     for(;;){
 
-        cout << "UWB_distance = " << dec << UWB_distance << endl;
-        cout << "UWB_fangwei = " << dec << UWB_fangwei  << endl;
-        cout << "UWB_zitai = " << dec << UWB_zitai << endl;
-
+        //cout << "UWB_distance = " << dec << UWB_distance << endl;
+        //cout << "UWB_fangwei = " << dec << UWB_fangwei  << endl;
+        //cout << "UWB_zitai = " << dec << UWB_zitai << endl;
 
         Control_steer_enable = 1;//TODO:when to start enable
 
@@ -19,38 +18,59 @@ void Control::Control_update(){
         control_time = time(NULL);*/
 
         // convert from int to float
-        float leader_wheel_speed = (float)(Leader_velocity);
-        float follower_wheel_speed = (float)(Follower_velocity)/256.0; // m/s
-        float leader_acceleration = (float)(Leader_acceleration);
-        float follower_acceleration = (float)(Follower_acceleration)*0.01 - 15.0; //m/s^2
+        float leader_speed = (float)(Leader_Speed) * 0.1;// m/s
+        float follower_speed = (float)(Follower_Speed)/256.0/3.6; // km/h
+
+        float follower_la_acc = (float)(Follower_La_acc)*0.01 - 15.0; //m/s^2
         float distance = (float)(UWB_distance)/100.0; // m
         float fangwei_angle = (float)(UWB_fangwei)/1.0; //degree
         float zitai_angle = (float)(UWB_zitai)/1.0; // degree
 
-        cout << "distance = " << distance << endl;
-        cout << "fangwei_angle = " << fangwei_angle << endl;
-        cout << "zitai_angle = " << zitai_angle << endl;
+        float leader_acc_pedal_position = (float)(Leader_ACC_pedal_position) * 0.4;
+        float leader_remote_position = (float)(Leader_Remote_position) * 0.4;
+        float leader_brake_pedal_position = (float)(Leader_Brake_pedal_position) * 0.01;
+        float leader_actual_acc = (float)(Leader_Actual_acc) * 0.1; //m/s^2
+        float leader_pressure = (float)(Leader_Pressure) * 0.01;
+        float leader_steering_wheel_angle = (float)(Leader_Steering_wheel_angle) * 0.1;
+        float leader_steering_wheel_speed = (float)(Leader_Steering_wheel_speed) * 4; //deg/s
+        //float leader_steering_wheel_state = (float)(Leader_Steering_wheel_state) * ;
+        //float leader_count = (float)(Leader_Count) * ;
+        //float leader_check = (float)(Leader_Check) * ;
+        float leader_wheel_speed = (float)(Leader_Wheel_speed) * 0.01;
+        float leader_la_acc = (float)(Leader_La_acc) * 0.01; //m/s^2
+        float leader_yr_speed = (float)(Leader_Yr_speed) * 0.01; //rad/s
+        //float leader_target_gear = (float)(Leader_Target_gear) * ;
+        //float leader_current_gear = (float)(Leader_Current_gear) * ;
+        float leader_acc_pedal = (float)(Leader_Acc_pedal) * 0.1;// deg
+        float leader_brake_pedal = (float)(Leader_Brake_pedal) * 0.1; //deg
+
 
         // Caculate middle variables
-        float leader_velocity;
-        leader_velocity = leader_wheel_speed;   //m/s
-        float follower_velocity;
-        follower_velocity = follower_wheel_speed; // m/s
+
         float long_distance;
         long_distance = distance * cos(fangwei_angle/180*M_PI); //m
         float lat_distance;
         lat_distance = distance * sin(fangwei_angle/180*M_PI); // m
         float control_steer;
-        control_steer = Control::Caculate_steer(lat_distance,long_distance);
+        control_steer = Control::Caculate_steer(lat_distance,long_distance);// degree
         float control_acc;
-        control_acc = Control::Caculate_acc(leader_velocity,follower_velocity,leader_acceleration,long_distance);
-        float brake_pressure;
-        brake_pressure = 0.5;
+        control_acc = Control::Caculate_acc(leader_speed,follower_speed,leader_la_acc,long_distance); //m/s^2
+        float control_brake_pressure;
+        control_brake_pressure = 0.5;
+
+        cout << "leader_speed = " << leader_speed << endl;
+        cout << "leader_acceleration = " << leader_la_acc << endl;
+        cout << "follower_velocity = " << follower_speed << endl;
+        cout << "follower_acceleration = " << follower_la_acc << endl;
+        cout << "long_distance = " << long_distance << endl;
+        cout << "lat_distance = " << lat_distance << endl;
+        cout << "control_steer = " << control_steer << endl;
+        cout << "control_acc = " << control_acc << endl;
 
         // convert from float to int
         Control_steer_angle = (int)((control_steer + 3276.7)/0.1); // Signal value = (physical value - offset)/precision value
         Control_acceleration = (int)((control_acc + 15)/0.1); //[-15,15] m/s^2
-        Control_pressure = (int)((brake_pressure)/0.01); // [0,1]MPa
+        Control_pressure = (int)((control_brake_pressure)/0.01); // [0,1]MPa
 
         //cout << "control_steer = " << control_steer << endl;
         //cout << "Control is updating " << endl;

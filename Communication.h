@@ -68,5 +68,13 @@ private:
     static void CAN2Val_UWB_leaderstate(int *message_ptr,int msg_length);
     static void CAN2Val_speed(int *message_ptr,int msg_length);
 
+    static void CAN2Val_acc_pedal(int *message_ptr,int msg_length);
+    static void CAN2Val_brake(int *message_ptr,int msg_length);
+    static void CAN2Val_steering_wheel(int *message_ptr,int msg_length);
+    static void CAN2Val_wheel(int *message_ptr,int msg_length);
+    static void CAN2Val_la_yr(int *message_ptr,int msg_length);
+    static void CAN2Val_gear_position(int *message_ptr,int msg_length);
+    static void CAN2Val_pedal_angle(int *message_ptr,int msg_length);
+
 };
 

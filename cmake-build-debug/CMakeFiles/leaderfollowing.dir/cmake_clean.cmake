@@ -2,6 +2,7 @@ file(REMOVE_RECURSE
   "CMakeFiles/leaderfollowing.dir/main.o"
   "CMakeFiles/leaderfollowing.dir/Control.o"
   "CMakeFiles/leaderfollowing.dir/Communication.o"
+  "CMakeFiles/leaderfollowing.dir/Statemechine.o"
   "leaderfollowing.pdb"
   "leaderfollowing"
 )

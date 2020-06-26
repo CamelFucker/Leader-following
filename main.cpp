@@ -1,15 +1,34 @@
 #include "Leader_following.h"
 
 using namespace std;
-
+// Define and initialize signals from follower
 int UWB_distance = 20 ;
 int UWB_fangwei = 0 ;
 int UWB_zitai = 0 ;
-int Leader_velocity = 0 ;
-int Leader_acceleration = 0 ;
-int Follower_velocity = 0 ;
-int Follower_acceleration = 0 ;
 
+int Follower_Speed = 0 ;
+int Follower_La_acc = 0 ;
+//Define and initialize signals from leader
+int Leader_ACC_pedal_position = 0;
+int Leader_Remote_position = 0;
+int Leader_Brake_pedal_position = 0;
+int Leader_Actual_acc = 0;
+int Leader_Speed = 0;
+int Leader_Pressure = 0;
+int Leader_Steering_wheel_angle = 0;
+int Leader_Steering_wheel_speed = 0;
+int Leader_Steering_wheel_state = 0;
+int Leader_Count = 0;
+int Leader_Check = 0;
+int Leader_Wheel_speed = 0;
+int Leader_La_acc = 0;
+int Leader_Yr_speed = 0;
+int Leader_Target_gear = 0;
+int Leader_Current_gear = 0;
+int Leader_Acc_pedal = 0;
+int Leader_Brake_pedal = 0;
+
+//Define and initialize control signals
 int Control_steer_angle = 32767 ;
 int Control_steer_enable = 0 ;
 int Control_steer_velocity = 56 ;

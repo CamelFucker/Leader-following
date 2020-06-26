@@ -154,6 +154,21 @@ Control.s:
 .PHONY : Control.s
 
 # target to build an object file
+Statemechine.o:
+	$(MAKE) -f CMakeFiles/leaderfollowing.dir/build.make CMakeFiles/leaderfollowing.dir/Statemechine.o
+.PHONY : Statemechine.o
+
+# target to preprocess a source file
+Statemechine.i:
+	$(MAKE) -f CMakeFiles/leaderfollowing.dir/build.make CMakeFiles/leaderfollowing.dir/Statemechine.i
+.PHONY : Statemechine.i
+
+# target to generate assembly for a file
+Statemechine.s:
+	$(MAKE) -f CMakeFiles/leaderfollowing.dir/build.make CMakeFiles/leaderfollowing.dir/Statemechine.s
+.PHONY : Statemechine.s
+
+# target to build an object file
 main.o:
 	$(MAKE) -f CMakeFiles/leaderfollowing.dir/build.make CMakeFiles/leaderfollowing.dir/main.o
 .PHONY : main.o
@@ -183,6 +198,9 @@ help:
 	@echo "... Control.o"
 	@echo "... Control.i"
 	@echo "... Control.s"
+	@echo "... Statemechine.o"
+	@echo "... Statemechine.i"
+	@echo "... Statemechine.s"
 	@echo "... main.o"
 	@echo "... main.i"
 	@echo "... main.s"
