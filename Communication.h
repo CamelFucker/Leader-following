@@ -9,6 +9,7 @@
 
 #define CAN_EFF_FLAG 0x80000000U //Extended Frame Mark
 #define CAN_EFF_MASK 0x1FFFFFFFU //Extended Frame format
+
 //CAN receive
 // MSG=(ID,dlc,EFF,CAN_channel)
 #define UWB_POSITION_ID 0x650

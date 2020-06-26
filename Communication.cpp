@@ -207,7 +207,7 @@ int * Communication::Con2CAN_acc(int control_mode,int acc_value, int pressure_va
 
 /********************************Convert CAN message to value************************************/
 void Communication::CAN2Val_acc(int *CANmsg_acc,int msg_length){
-    Follower_acceleration = CANmsg_acc[0] + CANmsg_acc[1];//TODO:resolution
+    Follower_acceleration = CANmsg_acc[0] + CANmsg_acc[1] * 256;
 }
 //Convert CANmsg to follower acc value
 

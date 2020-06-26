@@ -6,6 +6,10 @@
 
 #IncludeRegexTransform: 
 
+/home/nvidia/CLionProjects/leaderfollowing/Communication.cpp
+Leader_following.h
+/home/nvidia/CLionProjects/leaderfollowing/Leader_following.h
+
 /home/nvidia/CLionProjects/leaderfollowing/Communication.h
 stdio.h
 -
@@ -51,4 +55,8 @@ typeinfo
 -
 Communication.h
 /home/nvidia/CLionProjects/leaderfollowing/Communication.h
+
+/home/nvidia/CLionProjects/leaderfollowing/main.cpp
+Leader_following.h
+/home/nvidia/CLionProjects/leaderfollowing/Leader_following.h
 

@@ -20,8 +20,9 @@ void Control::Control_update(){
 
         // convert from int to float
         float leader_wheel_speed = (float)(Leader_velocity);
-        float follower_wheel_speed = (float)(Follower_velocity);
+        float follower_wheel_speed = (float)(Follower_velocity)/256.0; // m/s
         float leader_acceleration = (float)(Leader_acceleration);
+        float follower_acceleration = (float)(Follower_acceleration)*0.01 - 15.0; //m/s^2
         float distance = (float)(UWB_distance)/100.0; // m
         float fangwei_angle = (float)(UWB_fangwei)/1.0; //degree
         float zitai_angle = (float)(UWB_zitai)/1.0; // degree
@@ -34,11 +35,11 @@ void Control::Control_update(){
         float leader_velocity;
         leader_velocity = leader_wheel_speed;   //m/s
         float follower_velocity;
-        follower_velocity = follower_wheel_speed; //TODO:Wheel speed 2 vehicle velocity
+        follower_velocity = follower_wheel_speed; // m/s
         float long_distance;
         long_distance = distance * cos(fangwei_angle/180*M_PI); //m
         float lat_distance;
-        lat_distance = distance * sin(fangwei_angle/180*M_PI);
+        lat_distance = distance * sin(fangwei_angle/180*M_PI); // m
         float control_steer;
         control_steer = Control::Caculate_steer(lat_distance,long_distance);
         float control_acc;
@@ -81,6 +82,6 @@ float Control::Caculate_acc(float v1, float v2, float a1, float long_distance){
 }
 
 //TODO LIST
-//TODO:acc analysis and physical value caculation
+
 //TODO:STATEMECHINE
-//TODO:HOW TO MAKE DATASET
+//TODO:RECORD DATA
