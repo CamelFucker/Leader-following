@@ -6,14 +6,38 @@
 using namespace std;
 
 void Communication::CAN0_update(){
-    for(;;){
-        Communication::CAN_send(Con2CAN_steer(Control_steer_enable,Control_steer_angle,Control_steer_velocity),
-                CONTROL_STEER_MSG);
-        Communication::CAN_send(Con2CAN_acc(Control_mode,Control_acceleration,Control_pressure),
-                CONTROL_ACC_MSG);
-        usleep(SAMPLE_TIME);
-        //cout << "CAN1 data is updating..." << endl;
-    }
+    for(;;)
+        switch(State)
+        {
+            case READY_STATE:{
+                Communication::CAN_send(Con2CAN_steer(1,32000,100),
+                                        CONTROL_STEER_MSG);
+                Communication::CAN_send(Con2CAN_acc(1,64,0),
+                                        CONTROL_ACC_MSG);
+                usleep(SAMPLE_TIME);
+                //cout << "[READY STATE]CAN0 data is updating..." << endl;
+                break;
+            }
+            case RUN_STATE:{
+                Communication::CAN_send(Con2CAN_steer(1,Control_steer_angle,Control_steer_velocity),
+                                        CONTROL_STEER_MSG);
+                Communication::CAN_send(Con2CAN_acc(Control_mode,Control_acceleration,Control_pressure),
+                                        CONTROL_ACC_MSG);
+                usleep(SAMPLE_TIME);
+                //cout << "[RUN STATE]CAN0 data is updating..." << endl;
+                break;
+            }
+            default:{
+                Communication::CAN_send(Con2CAN_steer(0,Control_steer_angle,Control_steer_velocity),
+                                        CONTROL_STEER_MSG);
+                //cout << "[DRIVER MODE]CAN0 data is not updating..." << endl;
+            }
+
+        }
+
+
+            //cout << "CAN0 data is updating..." << endl;
+
 }
 //Send all messages
 
@@ -78,20 +102,23 @@ void Communication::CAN_send(int *message_ptr,int id,int msg_length,bool EFF, in
     nbytes = write(socket_word,&frame[0],sizeof(frame[0]));
     // Print CAN message or error
     if(nbytes != sizeof(frame[0])){
-        cout << "CAN Send Error! Check bitrate. " << endl;
+        if(CAN_SEND_CHECK)
+            cout << "CAN Send Error! Check bitrate. " << endl;
     }
     else{
-        cout << "Sending: ";
-        if(id == CONTROL_STEER_ID)
-            cout << "(control steer)";
-        else if(id == CONTROL_ACC_ID)
-            cout << "(control acc)";
-        cout << " CAN ID 0x" << hex << id << " : ";
-        for(int i=0; i< msg_length; i++) {
-            //CANmsg_acc[i] = *(CANmsg_acc_ptr + i);
-            cout << hex << message_ptr[i] << " ";
+        if(CAN_SEND_CHECK){
+            cout << "Sending: ";
+            if(id == CONTROL_STEER_ID)
+                cout << "(control steer)";
+            else if(id == CONTROL_ACC_ID)
+                cout << "(control acc)";
+            cout << " CAN ID 0x" << hex << id << " : ";
+            for(int i=0; i< msg_length; i++) {
+                //CANmsg_acc[i] = *(CANmsg_acc_ptr + i);
+                cout << hex << message_ptr[i] << " ";
+            }
+            cout << endl;
         }
-        cout << endl;
     };
     close(socket_word);
 }
@@ -135,22 +162,28 @@ int * Communication::CAN_get_msg(int id, bool EFF, int CAN_channel){
     /**********************************************************************/
     //cout << "**********************" << endl;
     // Convert CANmsg to int ptr
-    cout << "Receiving: ";
-    if(id == VEHICLE_ACC_ID)
-        cout << "(vehicle acc)";
-    else if(id == VEHICLE_SPEED_ID)
-        cout << "(vehicle speed)";
-    else if(id == UWB_POSITION_ID)
-        cout << "(UWB position)";
-    else if(id == UWB_LEADERSTATE_ID)
-        cout << "(UWB leader state)";
-    cout << " CAN ID 0x" << hex << id << ": ";
+    if(CAN_RECEIVE_CHECK){
+        cout << "Receiving: ";
+        if(id == VEHICLE_ACC_ID)
+            cout << "(vehicle acc)";
+        else if(id == VEHICLE_SPEED_ID)
+            cout << "(vehicle speed)";
+        else if(id == UWB_POSITION_ID)
+            cout << "(UWB position)";
+        else if(id == UWB_LEADERSTATE_ID)
+            cout << "(UWB leader state)";
+        cout << " CAN ID 0x" << hex << id << ": ";
+    }
+
     static int CAN_msg[8] = {0};
+
     for (int i=0;i<8;i++){
         CAN_msg[i] = (int)frame.data[i];
-        cout << CAN_msg[i] << " " ;
+        if(CAN_RECEIVE_CHECK)
+            cout << CAN_msg[i] << " " ;
     }
-    cout << endl;
+    if(CAN_RECEIVE_CHECK)
+        cout << endl;
 
     close(socket_word);
     return CAN_msg;
@@ -187,7 +220,7 @@ int * Communication::Con2CAN_steer(int steer_enable,int steer_angle,int steer_ve
 int * Communication::Con2CAN_acc(int control_mode,int acc_value, int pressure_value){
     static int msg_acc[8] = {0};
     static int loop_number = 0;
-    msg_acc[2] = control_mode;
+    msg_acc[2] = control_mode * 16;
     if(control_mode==0){//mode 0:No Brake
         msg_acc[0] = 0;
         msg_acc[1] = 0;
@@ -200,10 +233,11 @@ int * Communication::Con2CAN_acc(int control_mode,int acc_value, int pressure_va
         msg_acc[0] = pressure_value%256;
         msg_acc[1] = pressure_value/256;
     }
-    else if(control_mode==3){//mode 3:Require acc
+    /*else if(control_mode==3){//mode 3:Require acc
         msg_acc[0] = acc_value%256;
         msg_acc[1] = acc_value/256;
     }
+     */
     msg_acc[7] = loop_number%16;
     loop_number ++;
     return msg_acc;
@@ -260,12 +294,13 @@ void Communication::CAN2Val_UWB_leaderstate(int*msg,int msg_length){
 
 void Communication::CAN2Val_speed(int*CANmsg_speed,int msg_length){
     Follower_Speed = CANmsg_speed[6] + CANmsg_speed[7] * 256;
+
 }
 
 void Communication::CAN2Val_acc_pedal(int*CANmsg_acc_pedal,int msg_length){
     Leader_ACC_pedal_position = CANmsg_acc_pedal[1];
     Leader_Remote_position = CANmsg_acc_pedal[4];
-    cout << "Leader_ACC_pedal_position = " << Leader_ACC_pedal_position << endl;
+    //cout << "Leader_ACC_pedal_position = " << Leader_ACC_pedal_position << endl;
 }
 
 void Communication::CAN2Val_brake(int*CANmsg_brake,int msg_length){
@@ -276,7 +311,7 @@ void Communication::CAN2Val_brake(int*CANmsg_brake,int msg_length){
         Leader_Actual_acc = (CANmsg_brake[3] * 256 + CANmsg_brake[2]);
     Leader_Speed = (CANmsg_brake[5] * 256 + CANmsg_brake[4]);
     Leader_Pressure = CANmsg_brake[6];
-    cout << "Leader_Speed = " << Leader_Speed << endl;
+    //cout << "Leader_Speed = " << Leader_Speed << endl;
 }
 
 void Communication::CAN2Val_steering_wheel(int*CANmsg_steering_wheel,int msg_length){

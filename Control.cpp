@@ -11,7 +11,7 @@ void Control::Control_update(){
         //cout << "UWB_fangwei = " << dec << UWB_fangwei  << endl;
         //cout << "UWB_zitai = " << dec << UWB_zitai << endl;
 
-        Control_steer_enable = 1;//TODO:when to start enable
+        Control_steer_enable = 1;
 
         // Record time
         /*time_t control_time;
@@ -58,14 +58,23 @@ void Control::Control_update(){
         float control_brake_pressure;
         control_brake_pressure = 0.5;
 
-        cout << "leader_speed = " << leader_speed << endl;
-        cout << "leader_acceleration = " << leader_la_acc << endl;
-        cout << "follower_velocity = " << follower_speed << endl;
-        cout << "follower_acceleration = " << follower_la_acc << endl;
-        cout << "long_distance = " << long_distance << endl;
-        cout << "lat_distance = " << lat_distance << endl;
-        cout << "control_steer = " << control_steer << endl;
-        cout << "control_acc = " << control_acc << endl;
+
+        if(STATE_VALUE_PRINT){
+            cout << "******** STATE VALUE ********" << endl;
+            cout << "leader_speed = " << leader_speed << endl;
+            cout << "leader_acceleration = " << leader_la_acc << endl;
+            cout << "follower_velocity = " << follower_speed << endl;
+            cout << "follower_acceleration = " << follower_la_acc << endl;
+            cout << "long_distance = " << long_distance << endl;
+            cout << "lat_distance = " << lat_distance << endl;
+        }
+
+        if(CONTROL_VALUE_PRINT){
+            cout << "******* CONTROL VALUE *******" << endl;
+            cout << "control_steer = " << control_steer << endl;
+            cout << "control_acc = " << control_acc << endl;
+        }
+
 
         // convert from float to int
         Control_steer_angle = (int)((control_steer + 3276.7)/0.1); // Signal value = (physical value - offset)/precision value
@@ -94,6 +103,10 @@ float Control::Caculate_steer(float lat_distance, float long_distance){
 float Control::Caculate_acc(float v1, float v2, float a1, float long_distance){
     float control_acc;
     control_acc = a1 + k_v * (v1 - v2) + k_d * (long_distance - EXPECTED_DISTANCE);
+
+    // Keep velocity
+
+
     //cout << "K_v = " << to_string(k_v) << " and K_d = " << to_string(k_d) << endl;
     if(control_acc > 0.2)
         control_acc = 0.2; // acc limit

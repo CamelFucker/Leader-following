@@ -34,14 +34,16 @@ string.h
 string
 -
 
+/home/nvidia/CLionProjects/leaderfollowing/Control.cpp
+Leader_following.h
+/home/nvidia/CLionProjects/leaderfollowing/Leader_following.h
+
 /home/nvidia/CLionProjects/leaderfollowing/Leader_following.h
 thread
 -
 cmath
 -
 unistd.h
--
-curses.h
 -
 stdio.h
 -
@@ -51,4 +53,16 @@ typeinfo
 -
 Communication.h
 /home/nvidia/CLionProjects/leaderfollowing/Communication.h
+Statemechine.h
+/home/nvidia/CLionProjects/leaderfollowing/Statemechine.h
+
+/home/nvidia/CLionProjects/leaderfollowing/Statemechine.cpp
+Leader_following.h
+/home/nvidia/CLionProjects/leaderfollowing/Leader_following.h
+
+/home/nvidia/CLionProjects/leaderfollowing/Statemechine.h
+
+/home/nvidia/CLionProjects/leaderfollowing/main.cpp
+Leader_following.h
+/home/nvidia/CLionProjects/leaderfollowing/Leader_following.h
 

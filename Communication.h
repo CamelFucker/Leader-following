@@ -29,7 +29,6 @@
 #define CONTROL_ACC_MSG CONTROL_ACC_ID,8,1,0
 
 
-
 #include <stdio.h>
 #include <stdlib.h>
 #include <unistd.h>

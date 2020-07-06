@@ -10,16 +10,22 @@
 #define SAMPLE_TIME 20000  //us
 #define EXPECTED_DISTANCE 10
 
+#define CAN_SEND_CHECK 0
+#define CAN_RECEIVE_CHECK 0
+#define STATE_VALUE_PRINT 1
+#define CONTROL_VALUE_PRINT 0
+
+
 #include <thread>
 #include <cmath>
 #include <unistd.h>
-#include <curses.h>
+//#include <curses.h>
 #include <stdio.h>
 #include <ctime>
 #include <typeinfo>
 
 #include "Communication.h"
-
+#include "Statemechine.h"
 
 
 //Declare signals from follower
@@ -59,6 +65,14 @@ extern int Control_steer_velocity;
 extern int Control_mode; // 0:No brake;1:acc respond;2:pressure respond; 3: drive respond;
 extern int Control_acceleration;
 extern int Control_pressure;
+
+//Declare Statemechine
+extern int State; // Current State
+extern bool Signal_emergency;
+extern bool Command_ready;
+extern bool Command_run;
+extern bool Command_finish;
+extern bool Command_end;
 
 
 class Control{
