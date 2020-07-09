@@ -19,7 +19,7 @@ void Control::Control_update(){
 
         // convert from int to float
         float leader_speed = (float)(Leader_Speed) * 0.1;// m/s
-        float follower_speed = (float)(Follower_Speed)/256.0/3.6; // km/h
+        float follower_speed = (float)(Follower_Speed)/256.0/3.6; // m/s
 
         float follower_la_acc = (float)(Follower_La_acc)*0.01 - 15.0; //m/s^2
         float distance = (float)(UWB_distance)/100.0; // m
@@ -60,18 +60,19 @@ void Control::Control_update(){
 
 
         if(STATE_VALUE_PRINT){
-            cout << "******** STATE VALUE ********" << endl;
-            cout << "leader_speed = " << leader_speed << endl;
-            cout << "leader_acceleration = " << leader_la_acc << endl;
-            cout << "follower_velocity = " << follower_speed << endl;
-            cout << "follower_acceleration = " << follower_la_acc << endl;
-            cout << "long_distance = " << long_distance << endl;
-            cout << "lat_distance = " << lat_distance << endl;
+            //cout << "******** STATE VALUE ********" << endl;
+            //cout << "leader_speed = " << leader_speed << endl;
+            //cout << "leader_acceleration = " << leader_la_acc << endl;
+            cout << "follower_speed = " << follower_speed*3.6 << endl;
+            //cout << "follower_speed = " << Follower_Speed << endl;
+            //cout << "follower_acceleration = " << follower_la_acc << endl;
+            //cout << "long_distance = " << long_distance << endl;
+            //cout << "lat_distance = " << lat_distance << endl;
         }
 
         if(CONTROL_VALUE_PRINT){
-            cout << "******* CONTROL VALUE *******" << endl;
-            cout << "control_steer = " << control_steer << endl;
+            //cout << "******* CONTROL VALUE *******" << endl;
+            //cout << "control_steer = " << control_steer << endl;
             cout << "control_acc = " << control_acc << endl;
         }
 
@@ -83,7 +84,7 @@ void Control::Control_update(){
 
         //cout << "control_steer = " << control_steer << endl;
         //cout << "Control is updating " << endl;
-        //cout << "Control is updating" << "  Time is " << control_time << endl;
+        //cout << "Control is updcandumpating" << "  Time is " << control_time << endl;
         usleep(SAMPLE_TIME);
     }
 }
@@ -103,18 +104,15 @@ float Control::Caculate_steer(float lat_distance, float long_distance){
 float Control::Caculate_acc(float v1, float v2, float a1, float long_distance){
     float control_acc;
     control_acc = a1 + k_v * (v1 - v2) + k_d * (long_distance - EXPECTED_DISTANCE);
+    float desired_speed = 5/3.6;
 
     // Keep velocity
-
+    control_acc = 2 * (desired_speed - v2);
 
     //cout << "K_v = " << to_string(k_v) << " and K_d = " << to_string(k_d) << endl;
-    if(control_acc > 0.2)
-        control_acc = 0.2; // acc limit
+    if(control_acc > 2)
+        control_acc = 2; // acc limit
     //cout << "Control_acceleration = "<< to_string(control_acc) << endl;
     return control_acc;
 }
 
-//TODO LIST
-
-//TODO:STATEMECHINE
-//TODO:RECORD DATA

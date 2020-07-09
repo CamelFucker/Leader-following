@@ -8,9 +8,13 @@ using namespace std;
 void Communication::CAN0_update(){
     for(;;)
         switch(State)
-        {
+            {
+            case DRIVER_MODE:{
+                usleep(SAMPLE_TIME);
+                break;
+            }
             case READY_STATE:{
-                Communication::CAN_send(Con2CAN_steer(1,32000,100),
+                Communication::CAN_send(Con2CAN_steer(1,32767,100),
                                         CONTROL_STEER_MSG);
                 Communication::CAN_send(Con2CAN_acc(1,64,0),
                                         CONTROL_ACC_MSG);
@@ -19,8 +23,8 @@ void Communication::CAN0_update(){
                 break;
             }
             case RUN_STATE:{
-                Communication::CAN_send(Con2CAN_steer(1,Control_steer_angle,Control_steer_velocity),
-                                        CONTROL_STEER_MSG);
+                //Communication::CAN_send(Con2CAN_steer(1,Control_steer_angle,Control_steer_velocity),
+                //                        CONTROL_STEER_MSG);
                 Communication::CAN_send(Con2CAN_acc(Control_mode,Control_acceleration,Control_pressure),
                                         CONTROL_ACC_MSG);
                 usleep(SAMPLE_TIME);
@@ -225,11 +229,11 @@ int * Communication::Con2CAN_acc(int control_mode,int acc_value, int pressure_va
         msg_acc[0] = 0;
         msg_acc[1] = 0;
     }
-    else if(control_mode==1){//mode 1:Require deacc
+    else if(control_mode==2){//mode 1:Require deacc
         msg_acc[0] = acc_value%256;
         msg_acc[1] = acc_value/256;
     }
-    else if(control_mode==2){//mode 2:Require pressure
+    else if(control_mode==1){//mode 2:Require pressure
         msg_acc[0] = pressure_value%256;
         msg_acc[1] = pressure_value/256;
     }
@@ -294,7 +298,6 @@ void Communication::CAN2Val_UWB_leaderstate(int*msg,int msg_length){
 
 void Communication::CAN2Val_speed(int*CANmsg_speed,int msg_length){
     Follower_Speed = CANmsg_speed[6] + CANmsg_speed[7] * 256;
-
 }
 
 void Communication::CAN2Val_acc_pedal(int*CANmsg_acc_pedal,int msg_length){
@@ -324,7 +327,6 @@ void Communication::CAN2Val_steering_wheel(int*CANmsg_steering_wheel,int msg_len
     Leader_Count = CANmsg_steering_wheel[5];
     Leader_Check = CANmsg_steering_wheel[7];
 }
-
 
 void Communication::CAN2Val_wheel(int*CANmsg_wheel_speed,int msg_length){
     Leader_Wheel_speed = CANmsg_wheel_speed[3] * (256 * 256) + CANmsg_wheel_speed[2] * 256 + CANmsg_wheel_speed[1];
