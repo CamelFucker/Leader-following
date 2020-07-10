@@ -23,8 +23,17 @@ void Communication::CAN0_update(){
                 break;
             }
             case RUN_STATE:{
-                //Communication::CAN_send(Con2CAN_steer(1,Control_steer_angle,Control_steer_velocity),
-                //                        CONTROL_STEER_MSG);
+                Communication::CAN_send(Con2CAN_steer(1,Control_steer_angle,Control_steer_velocity),
+                                        CONTROL_STEER_MSG);
+                Communication::CAN_send(Con2CAN_acc(Control_mode,Control_acceleration,Control_pressure),
+                                        CONTROL_ACC_MSG);
+                usleep(SAMPLE_TIME);
+                //cout << "[RUN STATE]CAN0 data is updating..." << endl;
+                break;
+            }
+            case FINISH_STAE{
+                Communication::CAN_send(Con2CAN_steer(1,Control_steer_angle,Control_steer_velocity),
+                                        CONTROL_STEER_MSG);
                 Communication::CAN_send(Con2CAN_acc(Control_mode,Control_acceleration,Control_pressure),
                                         CONTROL_ACC_MSG);
                 usleep(SAMPLE_TIME);
@@ -32,8 +41,12 @@ void Communication::CAN0_update(){
                 break;
             }
             default:{
-                Communication::CAN_send(Con2CAN_steer(0,Control_steer_angle,Control_steer_velocity),
+                Communication::CAN_send(Con2CAN_steer(1,Control_steer_angle,Control_steer_velocity),
                                         CONTROL_STEER_MSG);
+                Communication::CAN_send(Con2CAN_acc(Control_mode,Control_acceleration,Control_pressure),
+                                        CONTROL_ACC_MSG);
+                usleep(SAMPLE_TIME);
+                //Test mode
                 //cout << "[DRIVER MODE]CAN0 data is not updating..." << endl;
             }
 
