@@ -31,7 +31,7 @@ void Communication::CAN0_update(){
                 //cout << "[RUN STATE]CAN0 data is updating..." << endl;
                 break;
             }
-            case FINISH_STAE{
+            case FINISH_STATE:{
                 Communication::CAN_send(Con2CAN_steer(1,Control_steer_angle,Control_steer_velocity),
                                         CONTROL_STEER_MSG);
                 Communication::CAN_send(Con2CAN_acc(Control_mode,Control_acceleration,Control_pressure),
@@ -39,6 +39,7 @@ void Communication::CAN0_update(){
                 usleep(SAMPLE_TIME);
                 //cout << "[RUN STATE]CAN0 data is updating..." << endl;
                 break;
+                
             }
             default:{
                 Communication::CAN_send(Con2CAN_steer(1,Control_steer_angle,Control_steer_velocity),
@@ -49,6 +50,7 @@ void Communication::CAN0_update(){
                 //Test mode
                 //cout << "[DRIVER MODE]CAN0 data is not updating..." << endl;
             }
+            
 
         }
 
@@ -150,6 +152,8 @@ int * Communication::CAN_get_msg(int id, bool EFF, int CAN_channel){
     static struct ifreq ifr;
     static struct can_frame frame;
     static struct can_filter rfliter[1];
+    mutex mut;
+    mut.lock();
     socket_word = socket(PF_CAN, SOCK_RAW, CAN_RAW);
 
     //Choose CAN channel
@@ -203,6 +207,7 @@ int * Communication::CAN_get_msg(int id, bool EFF, int CAN_channel){
         cout << endl;
 
     close(socket_word);
+    mut.unlock();
     return CAN_msg;
 
 }
@@ -304,7 +309,7 @@ void Communication::CAN2Val_UWB_leaderstate(int*msg,int msg_length){
         CAN2Val_gear_position(msg,msg_length);
     else if(msg[0] == 0xA7)
         CAN2Val_pedal_angle(msg,msg_length);
-    //CANmsg_UWB_state[8] TODO: convert CAN message to value
+    //CANmsg_UWB_state[8]
 
 }
 //Convert CANmsg to leader state value

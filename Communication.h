@@ -14,10 +14,11 @@
 // MSG=(ID,dlc,EFF,CAN_channel)
 #define UWB_POSITION_ID 0x650
 #define UWB_POSITION_MSG UWB_POSITION_ID,8,1,0
-#define UWB_LEADERSTATE_ID 0x10
+#define UWB_LEADERSTATE_ID 0x03100000
 
 #define UWB_LEADERSTATE_MSG UWB_LEADERSTATE_ID,8,1,0
-#define VEHICLE_SPEED_ID 0x0cfe6c03
+#define VEHICLE_SPEED_ID 0x190
+//0x0cfe6c03
 #define VEHICLE_SPEED_MSG VEHICLE_SPEED_ID,8,1,1
 #define VEHICLE_ACC_ID 0x18f02505
 #define VEHICLE_ACC_MSG VEHICLE_ACC_ID,8,1,0
@@ -53,11 +54,11 @@ public:
 
 private:
     //CAN_send func
-    static int socket_word;
-    static int nbytes;
-    static struct sockaddr_can addr;
-    static struct ifreq ifr;
-    static struct can_frame frame[2];
+    //static int socket_word;
+    //static int nbytes;
+    //static struct sockaddr_can addr;
+    //static struct ifreq ifr;
+    //static struct can_frame frame[2];
     //CAN_steer_msg
     static int * Con2CAN_steer(int steer_enable,int steer_angle,int steer_velocity);
     static int * Con2CAN_acc(int control_mode, int acc_value, int pressure_value);

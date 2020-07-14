@@ -1,0 +1,56 @@
+Determining if the pthread_create exist failed with the following output:
+Change Dir: /home/nvidia/CLionProjects/leaderfollowing/build/CMakeFiles/CMakeTmp
+
+Run Build Command:"/usr/bin/make" "cmTC_ddfdf/fast"
+/usr/bin/make -f CMakeFiles/cmTC_ddfdf.dir/build.make CMakeFiles/cmTC_ddfdf.dir/build
+make[1]: Entering directory '/home/nvidia/CLionProjects/leaderfollowing/build/CMakeFiles/CMakeTmp'
+Building C object CMakeFiles/cmTC_ddfdf.dir/CheckSymbolExists.c.o
+/usr/local/bin/aarch64-unknown-linux-gnu-gcc-8.1.0    -o CMakeFiles/cmTC_ddfdf.dir/CheckSymbolExists.c.o   -c /home/nvidia/CLionProjects/leaderfollowing/build/CMakeFiles/CMakeTmp/CheckSymbolExists.c
+Linking C executable cmTC_ddfdf
+/usr/local/bin/cmake -E cmake_link_script CMakeFiles/cmTC_ddfdf.dir/link.txt --verbose=1
+/usr/local/bin/aarch64-unknown-linux-gnu-gcc-8.1.0      -rdynamic CMakeFiles/cmTC_ddfdf.dir/CheckSymbolExists.c.o  -o cmTC_ddfdf 
+CMakeFiles/cmTC_ddfdf.dir/CheckSymbolExists.c.o: In function `main':
+CheckSymbolExists.c:(.text+0x14): undefined reference to `pthread_create'
+CheckSymbolExists.c:(.text+0x18): undefined reference to `pthread_create'
+collect2: error: ld returned 1 exit status
+CMakeFiles/cmTC_ddfdf.dir/build.make:86: recipe for target 'cmTC_ddfdf' failed
+make[1]: *** [cmTC_ddfdf] Error 1
+make[1]: Leaving directory '/home/nvidia/CLionProjects/leaderfollowing/build/CMakeFiles/CMakeTmp'
+Makefile:121: recipe for target 'cmTC_ddfdf/fast' failed
+make: *** [cmTC_ddfdf/fast] Error 2
+
+File /home/nvidia/CLionProjects/leaderfollowing/build/CMakeFiles/CMakeTmp/CheckSymbolExists.c:
+/* */
+#include <pthread.h>
+
+int main(int argc, char** argv)
+{
+  (void)argv;
+#ifndef pthread_create
+  return ((int*)(&pthread_create))[argc];
+#else
+  (void)argc;
+  return 0;
+#endif
+}
+
+Determining if the function pthread_create exists in the pthreads failed with the following output:
+Change Dir: /home/nvidia/CLionProjects/leaderfollowing/build/CMakeFiles/CMakeTmp
+
+Run Build Command:"/usr/bin/make" "cmTC_1e941/fast"
+/usr/bin/make -f CMakeFiles/cmTC_1e941.dir/build.make CMakeFiles/cmTC_1e941.dir/build
+make[1]: Entering directory '/home/nvidia/CLionProjects/leaderfollowing/build/CMakeFiles/CMakeTmp'
+Building C object CMakeFiles/cmTC_1e941.dir/CheckFunctionExists.c.o
+/usr/local/bin/aarch64-unknown-linux-gnu-gcc-8.1.0   -DCHECK_FUNCTION_EXISTS=pthread_create   -o CMakeFiles/cmTC_1e941.dir/CheckFunctionExists.c.o   -c /usr/local/share/cmake-3.12/Modules/CheckFunctionExists.c
+Linking C executable cmTC_1e941
+/usr/local/bin/cmake -E cmake_link_script CMakeFiles/cmTC_1e941.dir/link.txt --verbose=1
+/usr/local/bin/aarch64-unknown-linux-gnu-gcc-8.1.0  -DCHECK_FUNCTION_EXISTS=pthread_create    -rdynamic CMakeFiles/cmTC_1e941.dir/CheckFunctionExists.c.o  -o cmTC_1e941 -lpthreads 
+/usr/bin/ld: cannot find -lpthreads
+collect2: error: ld returned 1 exit status
+CMakeFiles/cmTC_1e941.dir/build.make:86: recipe for target 'cmTC_1e941' failed
+make[1]: *** [cmTC_1e941] Error 1
+make[1]: Leaving directory '/home/nvidia/CLionProjects/leaderfollowing/build/CMakeFiles/CMakeTmp'
+Makefile:121: recipe for target 'cmTC_1e941/fast' failed
+make: *** [cmTC_1e941/fast] Error 2
+
+

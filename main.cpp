@@ -8,12 +8,14 @@ int UWB_zitai = 0 ;
 
 int Follower_Speed = 0 ;
 int Follower_La_acc = 0 ;
+
 //Define and initialize signals from leader
 int Leader_ACC_pedal_position = 0;
 int Leader_Remote_position = 0;
 int Leader_Brake_pedal_position = 0;
 int Leader_Actual_acc = 0;
 int Leader_Speed = 0;
+
 int Leader_Pressure = 0;
 int Leader_Steering_wheel_angle = 0;
 int Leader_Steering_wheel_speed = 0;
@@ -48,9 +50,6 @@ bool Command_end = 0;
 
 int main()
 {
-    cout << "Main Thread" << endl;
-
-
     Communication follower_communication;
     Control follower_control;
     Statemechine follower_state_mechine;

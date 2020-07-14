@@ -2,7 +2,6 @@
 // Created by nvidia on 20-6-26.
 //
 #include "Leader_following.h"
-
 using namespace std;
 /*static const char help_string[] =
         "\n"
@@ -128,30 +127,3 @@ void Statemechine::stateflow(){
         }
     }
 }
-/*
-int main( )
-{
-    char cmd;
-    while(1)
-    {
-        cout << "Please enter your instruction：";
-        cin >> cmd;
-        cout << "Your instruction is：" << cmd << endl;
-
-        switch(cmd){
-            case 'r':
-                vehicle_state = 1;
-                printf("Ready! \n");
-                break;
-            case 's':
-                vehicle_state = 0;
-                printf("Stop! \n");
-                break;
-            default:
-                printf("%s\n", help_string);
-                break;
-        }
-    }
-}
-*/
-

@@ -1,0 +1,22 @@
+[
+{
+  "directory": "/home/nvidia/CLionProjects/leaderfollowing/build",
+  "command": "/usr/local/bin/c++    -g   -std=gnu++11 -o CMakeFiles/leaderfollowing.dir/main.o -c /home/nvidia/CLionProjects/leaderfollowing/main.cpp",
+  "file": "/home/nvidia/CLionProjects/leaderfollowing/main.cpp"
+},
+{
+  "directory": "/home/nvidia/CLionProjects/leaderfollowing/build",
+  "command": "/usr/local/bin/c++    -g   -std=gnu++11 -o CMakeFiles/leaderfollowing.dir/Control.o -c /home/nvidia/CLionProjects/leaderfollowing/Control.cpp",
+  "file": "/home/nvidia/CLionProjects/leaderfollowing/Control.cpp"
+},
+{
+  "directory": "/home/nvidia/CLionProjects/leaderfollowing/build",
+  "command": "/usr/local/bin/c++    -g   -std=gnu++11 -o CMakeFiles/leaderfollowing.dir/Communication.o -c /home/nvidia/CLionProjects/leaderfollowing/Communication.cpp",
+  "file": "/home/nvidia/CLionProjects/leaderfollowing/Communication.cpp"
+},
+{
+  "directory": "/home/nvidia/CLionProjects/leaderfollowing/build",
+  "command": "/usr/local/bin/c++    -g   -std=gnu++11 -o CMakeFiles/leaderfollowing.dir/Statemechine.o -c /home/nvidia/CLionProjects/leaderfollowing/Statemechine.cpp",
+  "file": "/home/nvidia/CLionProjects/leaderfollowing/Statemechine.cpp"
+}
+]

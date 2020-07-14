@@ -12,14 +12,15 @@
 
 #define SAMPLE_TIME 20000  //us
 #define EXPECTED_DISTANCE 10
-
-#define CAN_SEND_CHECK 1
+//Switch whether to print
+#define CAN_SEND_CHECK 0
 #define CAN_RECEIVE_CHECK 0
-#define STATE_VALUE_PRINT 1
-#define CONTROL_VALUE_PRINT 1
+#define STATE_VALUE_PRINT 0
+#define CONTROL_VALUE_PRINT 0
 
 
 #include <thread>
+#include <mutex>
 #include <cmath>
 #include <unistd.h>
 //#include <curses.h>

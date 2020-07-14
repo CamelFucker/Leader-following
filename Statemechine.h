@@ -19,5 +19,4 @@ public:
 private:
     static void get_cmd();
     static void stateflow();
-
 };

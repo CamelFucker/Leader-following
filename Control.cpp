@@ -66,13 +66,13 @@ void Control::Control_update(){
             cout << "follower_speed = " << follower_speed*3.6 << endl;
             //cout << "follower_speed = " << Follower_Speed << endl;
             //cout << "follower_acceleration = " << follower_la_acc << endl;
-            //cout << "long_distance = " << long_distance << endl;
-            //cout << "lat_distance = " << lat_distance << endl;
+            cout << "long_distance = " << long_distance << endl;
+            cout << "lat_distance = " << lat_distance << endl;
         }
 
         if(CONTROL_VALUE_PRINT){
             //cout << "******* CONTROL VALUE *******" << endl;
-            //cout << "control_steer = " << control_steer << endl;
+            cout << "control_steer = " << control_steer << endl;
             cout << "control_acc = " << control_acc << endl;
         }
 
