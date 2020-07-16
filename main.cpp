@@ -58,7 +58,7 @@ int main()
     thread th0(&follower_state_mechine.state_transition);
     thread th1(&follower_communication.CAN_receive,UWB_POSITION_MSG);//receive UWB position (args:ID CANchannel)
     thread th2(&follower_communication.CAN_receive,UWB_LEADERSTATE_MSG);//receive UWB leader_state
-    thread th3(&follower_communication.CAN_receive,VEHICLE_SPEED_MSG);//receive follower speed
+    //thread th3(&follower_communication.CAN_receive,VEHICLE_SPEED_MSG);//receive follower speed
     thread th6(&follower_communication.CAN_receive,VEHICLE_ACC_MSG);//receive follower ACC
 
     thread th4(&follower_control.Control_update);//control signal update
@@ -68,30 +68,10 @@ int main()
     th0.join();
     th1.join();
     th2.join();
-    th3.join();
+    //th3.join();
     th6.join();
     th4.join();
     th5.join();
-
-    /* TEST:CAN receive in main thread
-    int * canmsg;
-    while(1)
-    {
-        canmsg = follower_communication.CAN_get_msg(23);
-        cout << "Leader_acceleration = " << Leader_acceleration << endl;
-        follower_communication.CAN2Val_acc(canmsg,4);
-        usleep(SAMPLE_TIME);
-
-    }
-    */
-
-    /* TEST:CAN Send in main thread
-    int test_message = 234;
-    while(1){
-        follower_communication.CAN_send(test_message);
-        usleep(200000);
-    }
-    */
-
+    
     return 0;
 }

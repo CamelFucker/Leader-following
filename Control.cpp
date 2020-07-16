@@ -3,7 +3,7 @@
 //
 #include "Leader_following.h"
 
-#define K_P 0.3
+#define K_P 0.5
 #define K_I 0.0
 
 using namespace std;
@@ -24,9 +24,9 @@ void Control::Control_update(){
 
         // convert from int to float
         float leader_speed = (float)(Leader_Speed) * 0.1;// m/s
-        float follower_speed = (float)(Follower_Speed)/256.0/3.6; // m/s
+        float follower_speed = (float)(Follower_Speed)*0.1; // m/s
 
-        float follower_la_acc = (float)(Follower_La_acc)*0.01 - 15.0; //m/s^2
+        float follower_la_acc = (float)(Follower_La_acc)*0.1 - 15.0; //m/s^2
         float distance = (float)(UWB_distance)/100.0; // m
         float fangwei_angle = (float)(UWB_fangwei)/1.0; //degree
         float zitai_angle = (float)(UWB_zitai)/1.0; // degree
@@ -102,17 +102,19 @@ float Control::Caculate_steer(float lat_distance, float long_distance){
 
 float Control::Caculate_acc(float v1, float v2, float a1, float long_distance){
     float control_acc;
-    control_acc = a1 + k_v * (v1 - v2) + k_d * (long_distance - EXPECTED_DISTANCE);
+    //control_acc = a1 + k_v * (v1 - v2) + k_d * (long_distance - EXPECTED_DISTANCE);
     float desired_speed = 10/3.6;
-    int err = desired_speed - v2;
+    float err = desired_speed - v2;
 
     err_integral += err;
+    cout << "err = " << err << endl;
+    //cout << "v2 = " << v2 << endl;
     // Keep velocity
     control_acc = K_P * err + K_I * err_integral;
 
     //cout << "K_v = " << to_string(k_v) << " and K_d = " << to_string(k_d) << endl;
-    if(control_acc > 0.3)
-        control_acc = 0.3; // acc limit
+    if(control_acc > 0.5)
+        control_acc = 0.5; // acc limit
     //cout << "Control_acceleration = "<< to_string(control_acc) << endl;
     return control_acc;
 }

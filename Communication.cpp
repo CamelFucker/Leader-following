@@ -67,12 +67,13 @@ void Communication::CAN_receive(int id,int msg_length,bool EFF,int CAN_channel){
     for(;;){
         if(id == VEHICLE_ACC_ID){
             CAN2Val_acc(CAN_get_msg(id,EFF,CAN_channel),msg_length);
-            usleep(SAMPLE_TIME);
-        }
-        else if(id == VEHICLE_SPEED_ID){
             CAN2Val_speed(CAN_get_msg(id,EFF,CAN_channel),msg_length);
             usleep(SAMPLE_TIME);
         }
+        //else if(id == VEHICLE_SPEED_ID){
+        //    CAN2Val_speed(CAN_get_msg(id,EFF,CAN_channel),msg_length);
+        //    usleep(SAMPLE_TIME);
+        //}
         else if(id == UWB_POSITION_ID){
             CAN2Val_UWB_position(CAN_get_msg(id,EFF,CAN_channel),msg_length);
             usleep(SAMPLE_TIME);
@@ -190,8 +191,8 @@ int * Communication::CAN_get_msg(int id, bool EFF, int CAN_channel){
         cout << "Receiving: ";
         if(id == VEHICLE_ACC_ID)
             cout << "(vehicle acc)";
-        else if(id == VEHICLE_SPEED_ID)
-            cout << "(vehicle speed)";
+        //else if(id == VEHICLE_SPEED_ID)
+        //    cout << "(vehicle speed)";
         else if(id == UWB_POSITION_ID)
             cout << "(UWB position)";
         else if(id == UWB_LEADERSTATE_ID)
@@ -245,6 +246,13 @@ int * Communication::Con2CAN_steer(int steer_enable,int steer_angle,int steer_ve
 int * Communication::Con2CAN_acc(int control_mode,int acc_value, int pressure_value){
     static int msg_acc[8] = {0};
     static int loop_number = 0;
+    if(acc_value > 150){
+        control_mode = 2;
+    }
+    else if(acc_value < 150){
+        control_mode = 1;
+    }
+    else control_mode = 0;
     msg_acc[2] = control_mode * 16;
     if(control_mode==0){//mode 0:No Brake
         msg_acc[0] = 0;
@@ -272,7 +280,7 @@ int * Communication::Con2CAN_acc(int control_mode,int acc_value, int pressure_va
 
 /********************************Convert CAN message to value************************************/
 void Communication::CAN2Val_acc(int *CANmsg_acc,int msg_length){
-    Follower_La_acc = CANmsg_acc[0] + CANmsg_acc[1] * 256;
+    Follower_La_acc = CANmsg_acc[1] + CANmsg_acc[2] * 256;
 }
 //Convert CANmsg to follower acc value
 
@@ -320,7 +328,7 @@ void Communication::CAN2Val_speed(int*CANmsg_speed,int msg_length){
     mutex mut;
     //lock_guard<mutex> lock(mut);
     mut.lock();
-    Follower_Speed = CANmsg_speed[6] + CANmsg_speed[7] * 256;
+    Follower_Speed = CANmsg_speed[3] + CANmsg_speed[4] * 256;
     mut.unlock();
 }
 
