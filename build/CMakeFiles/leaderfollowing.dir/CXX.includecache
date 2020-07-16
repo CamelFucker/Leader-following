@@ -30,8 +30,14 @@ string.h
 string
 -
 
+/home/nvidia/CLionProjects/leaderfollowing/Control.cpp
+Leader_following.h
+/home/nvidia/CLionProjects/leaderfollowing/Leader_following.h
+
 /home/nvidia/CLionProjects/leaderfollowing/Leader_following.h
 thread
+-
+mutex
 -
 cmath
 -
@@ -49,8 +55,4 @@ Statemechine.h
 /home/nvidia/CLionProjects/leaderfollowing/Statemechine.h
 
 /home/nvidia/CLionProjects/leaderfollowing/Statemechine.h
-
-/home/nvidia/CLionProjects/leaderfollowing/main.cpp
-Leader_following.h
-/home/nvidia/CLionProjects/leaderfollowing/Leader_following.h
 

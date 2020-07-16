@@ -2,6 +2,10 @@
 // Created by nvidia on 20-6-21.
 //
 #include "Leader_following.h"
+
+#define K_P 0.3
+#define K_I 0.0
+
 using namespace std;
 
 void Control::Control_update(){
@@ -10,7 +14,8 @@ void Control::Control_update(){
         //cout << "UWB_distance = " << dec << UWB_distance << endl;
         //cout << "UWB_fangwei = " << dec << UWB_fangwei  << endl;
         //cout << "UWB_zitai = " << dec << UWB_zitai << endl;
-
+        mutex control_mut;
+        control_mut.lock();
         Control_steer_enable = 1;
 
         // Record time
@@ -44,6 +49,8 @@ void Control::Control_update(){
         float leader_acc_pedal = (float)(Leader_Acc_pedal) * 0.1;// deg
         float leader_brake_pedal = (float)(Leader_Brake_pedal) * 0.1; //deg
 
+        control_mut.unlock();
+
 
         // Caculate middle variables
 
@@ -65,26 +72,18 @@ void Control::Control_update(){
             //cout << "leader_acceleration = " << leader_la_acc << endl;
             cout << "follower_speed = " << follower_speed*3.6 << endl;
             //cout << "follower_speed = " << Follower_Speed << endl;
-            //cout << "follower_acceleration = " << follower_la_acc << endl;
-            cout << "long_distance = " << long_distance << endl;
-            cout << "lat_distance = " << lat_distance << endl;
+            cout << "follower_acceleration = " << follower_la_acc << endl;
+            //cout << "long_distance = " << long_distance << end                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                               l;
+            //cout << "lat_distance = " << lat_distance << endl;
         }
-
+//"Control is updcandumpating" << "  Time is " << control_time << endl;
         if(CONTROL_VALUE_PRINT){
-            //cout << "******* CONTROL VALUE *******" << endl;
-            cout << "control_steer = " << control_steer << endl;
-            cout << "control_acc = " << control_acc << endl;
+            cout << "control acc = " << control_acc << endl;
+            //cout << "control steer = " << control_steer << endl;
         }
-
-
-        // convert from float to int
         Control_steer_angle = (int)((control_steer + 3276.7)/0.1); // Signal value = (physical value - offset)/precision value
         Control_acceleration = (int)((control_acc + 15)/0.1); //[-15,15] m/s^2
         Control_pressure = (int)((control_brake_pressure)/0.01); // [0,1]MPa
-
-        //cout << "control_steer = " << control_steer << endl;
-        //cout << "Control is updating " << endl;
-        //cout << "Control is updcandumpating" << "  Time is " << control_time << endl;
         usleep(SAMPLE_TIME);
     }
 }
@@ -104,14 +103,16 @@ float Control::Caculate_steer(float lat_distance, float long_distance){
 float Control::Caculate_acc(float v1, float v2, float a1, float long_distance){
     float control_acc;
     control_acc = a1 + k_v * (v1 - v2) + k_d * (long_distance - EXPECTED_DISTANCE);
-    float desired_speed = 5/3.6;
+    float desired_speed = 10/3.6;
+    int err = desired_speed - v2;
 
+    err_integral += err;
     // Keep velocity
-    control_acc = 2 * (desired_speed - v2);
+    control_acc = K_P * err + K_I * err_integral;
 
     //cout << "K_v = " << to_string(k_v) << " and K_d = " << to_string(k_d) << endl;
-    if(control_acc > 2)
-        control_acc = 2; // acc limit
+    if(control_acc > 0.3)
+        control_acc = 0.3; // acc limit
     //cout << "Control_acceleration = "<< to_string(control_acc) << endl;
     return control_acc;
 }

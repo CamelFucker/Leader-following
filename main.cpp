@@ -47,6 +47,7 @@ bool Command_run = 0;
 bool Command_finish = 0;
 bool Command_end = 0;
 
+float err_integral = 0;
 
 int main()
 {

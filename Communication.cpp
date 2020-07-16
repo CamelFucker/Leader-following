@@ -14,19 +14,22 @@ void Communication::CAN0_update(){
                 break;
             }
             case READY_STATE:{
-                Communication::CAN_send(Con2CAN_steer(1,32767,100),
+                Communication::CAN_send(Con2CAN_steer(0,32767,100),
                                         CONTROL_STEER_MSG);
-                Communication::CAN_send(Con2CAN_acc(1,64,0),
+                Communication::CAN_send(Con2CAN_acc(1,130,0),
                                         CONTROL_ACC_MSG);
                 usleep(SAMPLE_TIME);
                 //cout << "[READY STATE]CAN0 data is updating..." << endl;
                 break;
             }
             case RUN_STATE:{
-                Communication::CAN_send(Con2CAN_steer(1,Control_steer_angle,Control_steer_velocity),
+                mutex mut;
+                mut.lock();
+                Communication::CAN_send(Con2CAN_steer(0,Control_steer_angle,Control_steer_velocity),
                                         CONTROL_STEER_MSG);
                 Communication::CAN_send(Con2CAN_acc(Control_mode,Control_acceleration,Control_pressure),
                                         CONTROL_ACC_MSG);
+                mut.unlock();
                 usleep(SAMPLE_TIME);
                 //cout << "[RUN STATE]CAN0 data is updating..." << endl;
                 break;
@@ -252,8 +255,8 @@ int * Communication::Con2CAN_acc(int control_mode,int acc_value, int pressure_va
         msg_acc[1] = acc_value/256;
     }
     else if(control_mode==1){//mode 2:Require pressure
-        msg_acc[0] = pressure_value%256;
-        msg_acc[1] = pressure_value/256;
+        msg_acc[0] = acc_value%256;
+        msg_acc[1] = acc_value/256;
     }
     /*else if(control_mode==3){//mode 3:Require acc
         msg_acc[0] = acc_value%256;
@@ -290,7 +293,6 @@ void Communication::CAN2Val_UWB_position(int*CANmsg_UWB,int msg_length){
     else {
         UWB_zitai = 256 * CANmsg_UWB[7] + CANmsg_UWB[6];
     }
-
 }
 //Convrt CANmsg to UWB position value
 
@@ -315,16 +317,24 @@ void Communication::CAN2Val_UWB_leaderstate(int*msg,int msg_length){
 //Convert CANmsg to leader state value
 
 void Communication::CAN2Val_speed(int*CANmsg_speed,int msg_length){
+    mutex mut;
+    //lock_guard<mutex> lock(mut);
+    mut.lock();
     Follower_Speed = CANmsg_speed[6] + CANmsg_speed[7] * 256;
+    mut.unlock();
 }
 
 void Communication::CAN2Val_acc_pedal(int*CANmsg_acc_pedal,int msg_length){
+    mutex mut;
+    lock_guard<mutex> lock(mut);
     Leader_ACC_pedal_position = CANmsg_acc_pedal[1];
     Leader_Remote_position = CANmsg_acc_pedal[4];
     //cout << "Leader_ACC_pedal_position = " << Leader_ACC_pedal_position << endl;
 }
 
 void Communication::CAN2Val_brake(int*CANmsg_brake,int msg_length){
+    mutex mut;
+    lock_guard<mutex> lock(mut);
     Leader_Brake_pedal_position = CANmsg_brake[1];
     if(CANmsg_brake[3] >= 0x80)
         Leader_Actual_acc = (CANmsg_brake[3] * 256 + CANmsg_brake[2]) - 0xFFFF - 1;
@@ -336,6 +346,8 @@ void Communication::CAN2Val_brake(int*CANmsg_brake,int msg_length){
 }
 
 void Communication::CAN2Val_steering_wheel(int*CANmsg_steering_wheel,int msg_length){
+    mutex mut;
+    lock_guard<mutex> lock(mut);
     if(CANmsg_steering_wheel[2] >= 0x80)
         Leader_Steering_wheel_angle = (CANmsg_steering_wheel[2] * 256 + CANmsg_steering_wheel[1]) - 0xFFFF - 1;
     else
@@ -347,20 +359,28 @@ void Communication::CAN2Val_steering_wheel(int*CANmsg_steering_wheel,int msg_len
 }
 
 void Communication::CAN2Val_wheel(int*CANmsg_wheel_speed,int msg_length){
+    mutex mut;
+    lock_guard<mutex> lock(mut);
     Leader_Wheel_speed = CANmsg_wheel_speed[3] * (256 * 256) + CANmsg_wheel_speed[2] * 256 + CANmsg_wheel_speed[1];
 }
 
 void Communication::CAN2Val_la_yr(int*CANmsg_la_yr,int msg_length){
+    mutex mut;
+    lock_guard<mutex> lock(mut);
     Leader_La_acc = CANmsg_la_yr[1] + CANmsg_la_yr[2] * 256;
     Leader_Yr_speed = CANmsg_la_yr[1] + CANmsg_la_yr[2] * 256;
 }
 
 void Communication::CAN2Val_gear_position(int*CANmsg_gear_position,int msg_length){
+    mutex mut;
+    lock_guard<mutex> lock(mut);
     Leader_Target_gear = CANmsg_gear_position[1];
     Leader_Current_gear = CANmsg_gear_position[5];
 }
 
 void Communication::CAN2Val_pedal_angle(int*CANmsg_pedal_angle,int msg_length){
+    mutex mut;
+    lock_guard<mutex> lock(mut);
     Leader_Acc_pedal = CANmsg_pedal_angle[1] + CANmsg_pedal_angle[2] * 256;
     Leader_Brake_pedal = CANmsg_pedal_angle[6] + CANmsg_pedal_angle[7] * 256;
 }
