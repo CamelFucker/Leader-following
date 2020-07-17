@@ -14,8 +14,8 @@ void Control::Control_update(){
         //cout << "UWB_distance = " << dec << UWB_distance << endl;
         //cout << "UWB_fangwei = " << dec << UWB_fangwei  << endl;
         //cout << "UWB_zitai = " << dec << UWB_zitai << endl;
-        mutex control_mut;
-        control_mut.lock();
+        mutex state_mut;
+        state_mut.lock();
         Control_steer_enable = 1;
 
         // Record time
@@ -49,7 +49,7 @@ void Control::Control_update(){
         float leader_acc_pedal = (float)(Leader_Acc_pedal) * 0.1;// deg
         float leader_brake_pedal = (float)(Leader_Brake_pedal) * 0.1; //deg
 
-        control_mut.unlock();
+        state_mut.unlock();
 
 
         // Caculate middle variables
@@ -81,9 +81,13 @@ void Control::Control_update(){
             cout << "control acc = " << control_acc << endl;
             //cout << "control steer = " << control_steer << endl;
         }
+        mutex control_mut;
+        control_mut.lock();
         Control_steer_angle = (int)((control_steer + 3276.7)/0.1); // Signal value = (physical value - offset)/precision value
         Control_acceleration = (int)((control_acc + 15)/0.1); //[-15,15] m/s^2
         Control_pressure = (int)((control_brake_pressure)/0.01); // [0,1]MPa
+        control_mut.unlock();
+        
         usleep(SAMPLE_TIME);
     }
 }
@@ -103,15 +107,15 @@ float Control::Caculate_steer(float lat_distance, float long_distance){
 float Control::Caculate_acc(float v1, float v2, float a1, float long_distance){
     float control_acc;
     //control_acc = a1 + k_v * (v1 - v2) + k_d * (long_distance - EXPECTED_DISTANCE);
-    float desired_speed = 10/3.6;
+    float desired_speed = 15/3.6;
     float err = desired_speed - v2;
-
-    err_integral += err;
+    PID pid_acc(0.5,0.1,0);
+    control_acc = pid_acc.pid_control(desired_speed,v2);
+    //err_integral += err;
     cout << "err = " << err << endl;
     //cout << "v2 = " << v2 << endl;
     // Keep velocity
-    control_acc = K_P * err + K_I * err_integral;
-
+    //control_acc = K_P * err + K_I * err_integral; 
     //cout << "K_v = " << to_string(k_v) << " and K_d = " << to_string(k_d) << endl;
     if(control_acc > 0.5)
         control_acc = 0.5; // acc limit
@@ -119,3 +123,34 @@ float Control::Caculate_acc(float v1, float v2, float a1, float long_distance){
     return control_acc;
 }
 
+/******************PID Control************************/
+PID::PID():kp(0),ki(0),kd(0),target(0),actual(0),integral(0){
+    error = target - actual;
+    error_pre = error;
+}
+PID::PID(float p,float i,float d):kp(p),ki(i),kd(d),target(0),actual(0),integral(0){
+    error = target - actual;
+    error_pre = error;
+}
+
+float PID::pid_control(float tar,float act){
+    float u;
+    target = tar;
+    actual = act;
+    error = target - actual;
+    integral += error;
+    u = kp * error + ki * integral + kd * (error - error_pre);
+    error_pre = error;
+    return u;
+}
+
+void PID::pid_show(){
+    cout << "Kp = " << kp << endl;
+    cout << "Ki = " << ki << endl;
+    cout << "Kd = " << kd << endl;
+    cout << "Integral = " << integral << endl;
+    cout << "Target = " << target << endl;
+    cout << "Actual = " << actual << endl;
+    cout << "Error = " << error << endl;
+    cout << "Error_pre = " << error_pre << endl;
+}

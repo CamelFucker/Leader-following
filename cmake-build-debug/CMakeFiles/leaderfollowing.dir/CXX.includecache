@@ -30,6 +30,12 @@ string.h
 string
 -
 
+/home/nvidia/CLionProjects/leaderfollowing/Control.cpp
+Leader_following.h
+/home/nvidia/CLionProjects/leaderfollowing/Leader_following.h
+
+/home/nvidia/CLionProjects/leaderfollowing/Control.h
+
 /home/nvidia/CLionProjects/leaderfollowing/Leader_following.h
 thread
 -
@@ -49,10 +55,8 @@ Communication.h
 /home/nvidia/CLionProjects/leaderfollowing/Communication.h
 Statemechine.h
 /home/nvidia/CLionProjects/leaderfollowing/Statemechine.h
+Control.h
+/home/nvidia/CLionProjects/leaderfollowing/Control.h
 
 /home/nvidia/CLionProjects/leaderfollowing/Statemechine.h
-
-/home/nvidia/CLionProjects/leaderfollowing/main.cpp
-Leader_following.h
-/home/nvidia/CLionProjects/leaderfollowing/Leader_following.h
 

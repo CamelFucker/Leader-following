@@ -13,8 +13,8 @@
 #define SAMPLE_TIME 20000  //us
 #define EXPECTED_DISTANCE 10
 //Switch whether to print
-#define CAN_SEND_CHECK 0
-#define CAN_RECEIVE_CHECK 0
+#define CAN_SEND_CHECK 1
+#define CAN_RECEIVE_CHECK 1
 #define STATE_VALUE_PRINT 1
 #define CONTROL_VALUE_PRINT 1
 
@@ -30,6 +30,7 @@
 
 #include "Communication.h"
 #include "Statemechine.h"
+#include "Control.h"
 
 
 //Declare signals from follower
@@ -79,8 +80,7 @@ extern bool Command_finish;
 extern bool Command_end;
 
 extern float err_integral;
-
-
+/*
 class Control{
 private:
     // args
@@ -132,5 +132,5 @@ public:
     static float Caculate_steer(float lat_distance, float long_distance);
     static float Caculate_acc(float v1, float v2, float a1, float long_distance);
 };
-
+*/
 

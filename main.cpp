@@ -62,7 +62,6 @@ int main()
     thread th6(&follower_communication.CAN_receive,VEHICLE_ACC_MSG);//receive follower ACC
 
     thread th4(&follower_control.Control_update);//control signal update
-
     thread th5(&follower_communication.CAN0_update);//send control signals
 
     th0.join();
@@ -72,6 +71,6 @@ int main()
     th6.join();
     th4.join();
     th5.join();
-    
+
     return 0;
 }
