@@ -35,9 +35,9 @@ void Communication::CAN0_update(){
                 break;
             }
             case FINISH_STATE:{
-                Communication::CAN_send(Con2CAN_steer(1,Control_steer_angle,Control_steer_velocity),
+                Communication::CAN_send(Con2CAN_steer(0,32767,100),
                                         CONTROL_STEER_MSG);
-                Communication::CAN_send(Con2CAN_acc(Control_mode,Control_acceleration,Control_pressure),
+                Communication::CAN_send(Con2CAN_acc(1,130,0),
                                         CONTROL_ACC_MSG);
                 usleep(SAMPLE_TIME);
                 //cout << "[RUN STATE]CAN0 data is updating..." << endl;
@@ -45,9 +45,9 @@ void Communication::CAN0_update(){
                 
             }
             default:{
-                Communication::CAN_send(Con2CAN_steer(1,Control_steer_angle,Control_steer_velocity),
+                Communication::CAN_send(Con2CAN_steer(0,Control_steer_angle,Control_steer_velocity),
                                         CONTROL_STEER_MSG);
-                Communication::CAN_send(Con2CAN_acc(Control_mode,Control_acceleration,Control_pressure),
+                Communication::CAN_send(Con2CAN_acc(1,130,0),
                                         CONTROL_ACC_MSG);
                 usleep(SAMPLE_TIME);
                 //Test mode
@@ -125,11 +125,11 @@ void Communication::CAN_send(int *message_ptr,int id,int msg_length,bool EFF, in
     nbytes = write(socket_word,&frame[0],sizeof(frame[0]));
     // Print CAN message or error
     if(nbytes != sizeof(frame[0])){
-        if(CAN_SEND_CHECK)
+        if(CAN_SEND_CHECK|Show_switch)
             cout << "CAN Send Error! Check bitrate. " << endl;
     }
     else{
-        if(CAN_SEND_CHECK){
+        if(CAN_SEND_CHECK|Show_switch){
             cout << "Sending: ";
             if(id == CONTROL_STEER_ID)
                 cout << "(control steer)";
@@ -151,11 +151,11 @@ int * Communication::CAN_get_msg(int id, bool EFF, int CAN_channel){
     //cout << "Receiving ID " << id << " ..." << endl;
 
     /***********************Sockek_CAN config*****************************/
-    static int socket_word, nbytes;
-    static struct sockaddr_can addr;
-    static struct ifreq ifr;
-    static struct can_frame frame;
-    static struct can_filter rfliter[1];
+    int socket_word, nbytes;
+    struct sockaddr_can addr;
+    struct ifreq ifr;
+    struct can_frame frame;
+    struct can_filter rfliter[1];
     mutex mut;
     mut.lock();
     socket_word = socket(PF_CAN, SOCK_RAW, CAN_RAW);
@@ -187,7 +187,7 @@ int * Communication::CAN_get_msg(int id, bool EFF, int CAN_channel){
     /**********************************************************************/
     //cout << "**********************" << endl;
     // Convert CANmsg to int ptr
-    if(CAN_RECEIVE_CHECK){
+    if(CAN_RECEIVE_CHECK|Show_switch){
         cout << "Receiving: ";
         if(id == VEHICLE_ACC_ID)
             cout << "(vehicle acc)";
@@ -204,10 +204,10 @@ int * Communication::CAN_get_msg(int id, bool EFF, int CAN_channel){
 
     for (int i=0;i<8;i++){
         CAN_msg[i] = (int)frame.data[i];
-        if(CAN_RECEIVE_CHECK)
+        if(CAN_RECEIVE_CHECK|Show_switch)
             cout << CAN_msg[i] << " " ;
     }
-    if(CAN_RECEIVE_CHECK)
+    if(CAN_RECEIVE_CHECK|Show_switch)
         cout << endl;
 
     close(socket_word);
@@ -325,11 +325,7 @@ void Communication::CAN2Val_UWB_leaderstate(int*msg,int msg_length){
 //Convert CANmsg to leader state value
 
 void Communication::CAN2Val_speed(int*CANmsg_speed,int msg_length){
-    mutex mut;
-    //lock_guard<mutex> lock(mut);
-    mut.lock();
     Follower_Speed = CANmsg_speed[3] + CANmsg_speed[4] * 256;
-    mut.unlock();
 }
 
 void Communication::CAN2Val_acc_pedal(int*CANmsg_acc_pedal,int msg_length){

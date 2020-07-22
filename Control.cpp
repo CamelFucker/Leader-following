@@ -3,8 +3,6 @@
 //
 #include "Leader_following.h"
 
-#define K_P 0.5
-#define K_I 0.0
 
 using namespace std;
 
@@ -34,7 +32,7 @@ void Control::Control_update(){
         float leader_acc_pedal_position = (float)(Leader_ACC_pedal_position) * 0.4;
         float leader_remote_position = (float)(Leader_Remote_position) * 0.4;
         float leader_brake_pedal_position = (float)(Leader_Brake_pedal_position) * 0.01;
-        float leader_actual_acc = (float)(Leader_Actual_acc) * 0.1; //m/s^2
+        float leader_actual_acc = (float)(Leader_Actual_acc) * 0.1 - 15; //m/s^2
         float leader_pressure = (float)(Leader_Pressure) * 0.01;
         float leader_steering_wheel_angle = (float)(Leader_Steering_wheel_angle) * 0.1;
         float leader_steering_wheel_speed = (float)(Leader_Steering_wheel_speed) * 4; //deg/s
@@ -66,18 +64,18 @@ void Control::Control_update(){
         control_brake_pressure = 0.5;
 
 
-        if(STATE_VALUE_PRINT){
+        if(STATE_VALUE_PRINT|Show_switch){
             //cout << "******** STATE VALUE ********" << endl;
             //cout << "leader_speed = " << leader_speed << endl;
-            //cout << "leader_acceleration = " << leader_la_acc << endl;
-            cout << "follower_speed = " << follower_speed*3.6 << endl;
+            cout << "leader_acceleration = " << leader_actual_acc << endl;
+            //cout << "follower_speed = " << follower_speed*3.6 << endl;
             //cout << "follower_speed = " << Follower_Speed << endl;
             cout << "follower_acceleration = " << follower_la_acc << endl;
             //cout << "long_distance = " << long_distance << end                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                               l;
             //cout << "lat_distance = " << lat_distance << endl;
         }
 //"Control is updcandumpating" << "  Time is " << control_time << endl;
-        if(CONTROL_VALUE_PRINT){
+        if(CONTROL_VALUE_PRINT|Show_switch){
             cout << "control acc = " << control_acc << endl;
             //cout << "control steer = " << control_steer << endl;
         }
@@ -108,11 +106,11 @@ float Control::Caculate_acc(float v1, float v2, float a1, float long_distance){
     float control_acc;
     //control_acc = a1 + k_v * (v1 - v2) + k_d * (long_distance - EXPECTED_DISTANCE);
     float desired_speed = 15/3.6;
-    float err = desired_speed - v2;
+    float err = float(Desired_speed)/3.6 - v2;
     PID pid_acc(0.5,0.1,0);
-    control_acc = pid_acc.pid_control(desired_speed,v2);
+    control_acc = pid_acc.pid_control(float(Desired_speed)/3.6,v2);
     //err_integral += err;
-    cout << "err = " << err << endl;
+    //cout << "err = " << err << endl;
     //cout << "v2 = " << v2 << endl;
     // Keep velocity
     //control_acc = K_P * err + K_I * err_integral; 

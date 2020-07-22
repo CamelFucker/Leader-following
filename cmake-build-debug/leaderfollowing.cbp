@@ -8,104 +8,109 @@
 		<Option virtualFolders="CMake Files\;"/>
 		<Build>
 			<Target title="all">
-				<Option working_dir="/home/nvidia/CLionProjects/leaderfollowing/cmake-build-debug"/>
+				<Option working_dir="/home/nvidia/CLionProjects/Leader-following/cmake-build-debug"/>
 				<Option type="4"/>
 				<MakeCommands>
-					<Build command="/usr/bin/make -j4 -f &quot;/home/nvidia/CLionProjects/leaderfollowing/cmake-build-debug/Makefile&quot;  VERBOSE=1 all"/>
-					<CompileFile command="/usr/bin/make -j4 -f &quot;/home/nvidia/CLionProjects/leaderfollowing/cmake-build-debug/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
-					<Clean command="/usr/bin/make -j4 -f &quot;/home/nvidia/CLionProjects/leaderfollowing/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
-					<DistClean command="/usr/bin/make -j4 -f &quot;/home/nvidia/CLionProjects/leaderfollowing/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+					<Build command="/usr/bin/make -j4 -f &quot;/home/nvidia/CLionProjects/Leader-following/cmake-build-debug/Makefile&quot;  VERBOSE=1 all"/>
+					<CompileFile command="/usr/bin/make -j4 -f &quot;/home/nvidia/CLionProjects/Leader-following/cmake-build-debug/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
+					<Clean command="/usr/bin/make -j4 -f &quot;/home/nvidia/CLionProjects/Leader-following/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+					<DistClean command="/usr/bin/make -j4 -f &quot;/home/nvidia/CLionProjects/Leader-following/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
 				</MakeCommands>
 			</Target>
 			<Target title="rebuild_cache">
-				<Option working_dir="/home/nvidia/CLionProjects/leaderfollowing/cmake-build-debug"/>
+				<Option working_dir="/home/nvidia/CLionProjects/Leader-following/cmake-build-debug"/>
 				<Option type="4"/>
 				<MakeCommands>
-					<Build command="/usr/bin/make -j4 -f &quot;/home/nvidia/CLionProjects/leaderfollowing/cmake-build-debug/Makefile&quot;  VERBOSE=1 rebuild_cache"/>
-					<CompileFile command="/usr/bin/make -j4 -f &quot;/home/nvidia/CLionProjects/leaderfollowing/cmake-build-debug/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
-					<Clean command="/usr/bin/make -j4 -f &quot;/home/nvidia/CLionProjects/leaderfollowing/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
-					<DistClean command="/usr/bin/make -j4 -f &quot;/home/nvidia/CLionProjects/leaderfollowing/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+					<Build command="/usr/bin/make -j4 -f &quot;/home/nvidia/CLionProjects/Leader-following/cmake-build-debug/Makefile&quot;  VERBOSE=1 rebuild_cache"/>
+					<CompileFile command="/usr/bin/make -j4 -f &quot;/home/nvidia/CLionProjects/Leader-following/cmake-build-debug/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
+					<Clean command="/usr/bin/make -j4 -f &quot;/home/nvidia/CLionProjects/Leader-following/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+					<DistClean command="/usr/bin/make -j4 -f &quot;/home/nvidia/CLionProjects/Leader-following/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
 				</MakeCommands>
 			</Target>
 			<Target title="leaderfollowing">
-				<Option output="/home/nvidia/CLionProjects/leaderfollowing/cmake-build-debug/leaderfollowing" prefix_auto="0" extension_auto="0"/>
+				<Option output="/home/nvidia/CLionProjects/Leader-following/cmake-build-debug/leaderfollowing" prefix_auto="0" extension_auto="0"/>
 				<Option working_dir=""/>
 				<Option object_output="./"/>
 				<Option type="1"/>
 				<Option compiler="gcc"/>
 				<Compiler>
-					<Add directory="/usr/include/c++/5"/>
-					<Add directory="/usr/include/aarch64-linux-gnu/c++/5"/>
-					<Add directory="/usr/include/c++/5/backward"/>
-					<Add directory="/usr/lib/gcc/aarch64-linux-gnu/5/include"/>
+					<Add directory="/usr/local/gcc-8.1/lib/gcc/aarch64-unknown-linux-gnu/8.1.0/../../../../include/c++/8.1.0"/>
+					<Add directory="/usr/local/gcc-8.1/lib/gcc/aarch64-unknown-linux-gnu/8.1.0/../../../../include/c++/8.1.0/aarch64-unknown-linux-gnu"/>
+					<Add directory="/usr/local/gcc-8.1/lib/gcc/aarch64-unknown-linux-gnu/8.1.0/../../../../include/c++/8.1.0/backward"/>
+					<Add directory="/usr/local/gcc-8.1/lib/gcc/aarch64-unknown-linux-gnu/8.1.0/include"/>
 					<Add directory="/usr/local/include"/>
-					<Add directory="/usr/lib/gcc/aarch64-linux-gnu/5/include-fixed"/>
+					<Add directory="/usr/local/gcc-8.1/include"/>
+					<Add directory="/usr/local/gcc-8.1/lib/gcc/aarch64-unknown-linux-gnu/8.1.0/include-fixed"/>
 					<Add directory="/usr/include/aarch64-linux-gnu"/>
 					<Add directory="/usr/include"/>
 				</Compiler>
 				<MakeCommands>
-					<Build command="/usr/bin/make -j4 -f &quot;/home/nvidia/CLionProjects/leaderfollowing/cmake-build-debug/Makefile&quot;  VERBOSE=1 leaderfollowing"/>
-					<CompileFile command="/usr/bin/make -j4 -f &quot;/home/nvidia/CLionProjects/leaderfollowing/cmake-build-debug/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
-					<Clean command="/usr/bin/make -j4 -f &quot;/home/nvidia/CLionProjects/leaderfollowing/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
-					<DistClean command="/usr/bin/make -j4 -f &quot;/home/nvidia/CLionProjects/leaderfollowing/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+					<Build command="/usr/bin/make -j4 -f &quot;/home/nvidia/CLionProjects/Leader-following/cmake-build-debug/Makefile&quot;  VERBOSE=1 leaderfollowing"/>
+					<CompileFile command="/usr/bin/make -j4 -f &quot;/home/nvidia/CLionProjects/Leader-following/cmake-build-debug/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
+					<Clean command="/usr/bin/make -j4 -f &quot;/home/nvidia/CLionProjects/Leader-following/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+					<DistClean command="/usr/bin/make -j4 -f &quot;/home/nvidia/CLionProjects/Leader-following/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
 				</MakeCommands>
 			</Target>
 			<Target title="leaderfollowing/fast">
-				<Option output="/home/nvidia/CLionProjects/leaderfollowing/cmake-build-debug/leaderfollowing" prefix_auto="0" extension_auto="0"/>
+				<Option output="/home/nvidia/CLionProjects/Leader-following/cmake-build-debug/leaderfollowing" prefix_auto="0" extension_auto="0"/>
 				<Option working_dir=""/>
 				<Option object_output="./"/>
 				<Option type="1"/>
 				<Option compiler="gcc"/>
 				<Compiler>
-					<Add directory="/usr/include/c++/5"/>
-					<Add directory="/usr/include/aarch64-linux-gnu/c++/5"/>
-					<Add directory="/usr/include/c++/5/backward"/>
-					<Add directory="/usr/lib/gcc/aarch64-linux-gnu/5/include"/>
+					<Add directory="/usr/local/gcc-8.1/lib/gcc/aarch64-unknown-linux-gnu/8.1.0/../../../../include/c++/8.1.0"/>
+					<Add directory="/usr/local/gcc-8.1/lib/gcc/aarch64-unknown-linux-gnu/8.1.0/../../../../include/c++/8.1.0/aarch64-unknown-linux-gnu"/>
+					<Add directory="/usr/local/gcc-8.1/lib/gcc/aarch64-unknown-linux-gnu/8.1.0/../../../../include/c++/8.1.0/backward"/>
+					<Add directory="/usr/local/gcc-8.1/lib/gcc/aarch64-unknown-linux-gnu/8.1.0/include"/>
 					<Add directory="/usr/local/include"/>
-					<Add directory="/usr/lib/gcc/aarch64-linux-gnu/5/include-fixed"/>
+					<Add directory="/usr/local/gcc-8.1/include"/>
+					<Add directory="/usr/local/gcc-8.1/lib/gcc/aarch64-unknown-linux-gnu/8.1.0/include-fixed"/>
 					<Add directory="/usr/include/aarch64-linux-gnu"/>
 					<Add directory="/usr/include"/>
 				</Compiler>
 				<MakeCommands>
-					<Build command="/usr/bin/make -j4 -f &quot;/home/nvidia/CLionProjects/leaderfollowing/cmake-build-debug/Makefile&quot;  VERBOSE=1 leaderfollowing/fast"/>
-					<CompileFile command="/usr/bin/make -j4 -f &quot;/home/nvidia/CLionProjects/leaderfollowing/cmake-build-debug/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
-					<Clean command="/usr/bin/make -j4 -f &quot;/home/nvidia/CLionProjects/leaderfollowing/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
-					<DistClean command="/usr/bin/make -j4 -f &quot;/home/nvidia/CLionProjects/leaderfollowing/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+					<Build command="/usr/bin/make -j4 -f &quot;/home/nvidia/CLionProjects/Leader-following/cmake-build-debug/Makefile&quot;  VERBOSE=1 leaderfollowing/fast"/>
+					<CompileFile command="/usr/bin/make -j4 -f &quot;/home/nvidia/CLionProjects/Leader-following/cmake-build-debug/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
+					<Clean command="/usr/bin/make -j4 -f &quot;/home/nvidia/CLionProjects/Leader-following/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+					<DistClean command="/usr/bin/make -j4 -f &quot;/home/nvidia/CLionProjects/Leader-following/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
 				</MakeCommands>
 			</Target>
 			<Target title="edit_cache">
-				<Option working_dir="/home/nvidia/CLionProjects/leaderfollowing/cmake-build-debug"/>
+				<Option working_dir="/home/nvidia/CLionProjects/Leader-following/cmake-build-debug"/>
 				<Option type="4"/>
 				<MakeCommands>
-					<Build command="/usr/bin/make -j4 -f &quot;/home/nvidia/CLionProjects/leaderfollowing/cmake-build-debug/Makefile&quot;  VERBOSE=1 edit_cache"/>
-					<CompileFile command="/usr/bin/make -j4 -f &quot;/home/nvidia/CLionProjects/leaderfollowing/cmake-build-debug/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
-					<Clean command="/usr/bin/make -j4 -f &quot;/home/nvidia/CLionProjects/leaderfollowing/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
-					<DistClean command="/usr/bin/make -j4 -f &quot;/home/nvidia/CLionProjects/leaderfollowing/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+					<Build command="/usr/bin/make -j4 -f &quot;/home/nvidia/CLionProjects/Leader-following/cmake-build-debug/Makefile&quot;  VERBOSE=1 edit_cache"/>
+					<CompileFile command="/usr/bin/make -j4 -f &quot;/home/nvidia/CLionProjects/Leader-following/cmake-build-debug/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
+					<Clean command="/usr/bin/make -j4 -f &quot;/home/nvidia/CLionProjects/Leader-following/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+					<DistClean command="/usr/bin/make -j4 -f &quot;/home/nvidia/CLionProjects/Leader-following/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
 				</MakeCommands>
 			</Target>
 		</Build>
-		<Unit filename="/home/nvidia/CLionProjects/leaderfollowing/Communication.cpp">
+		<Unit filename="/home/nvidia/CLionProjects/Leader-following/Communication.cpp">
 			<Option target="leaderfollowing"/>
 		</Unit>
-		<Unit filename="/home/nvidia/CLionProjects/leaderfollowing/Communication.h">
+		<Unit filename="/home/nvidia/CLionProjects/Leader-following/Communication.h">
 			<Option target="leaderfollowing"/>
 		</Unit>
-		<Unit filename="/home/nvidia/CLionProjects/leaderfollowing/Control.cpp">
+		<Unit filename="/home/nvidia/CLionProjects/Leader-following/Control.cpp">
 			<Option target="leaderfollowing"/>
 		</Unit>
-		<Unit filename="/home/nvidia/CLionProjects/leaderfollowing/Leader_following.h">
+		<Unit filename="/home/nvidia/CLionProjects/Leader-following/Control.h">
 			<Option target="leaderfollowing"/>
 		</Unit>
-		<Unit filename="/home/nvidia/CLionProjects/leaderfollowing/Statemechine.cpp">
+		<Unit filename="/home/nvidia/CLionProjects/Leader-following/Leader_following.h">
 			<Option target="leaderfollowing"/>
 		</Unit>
-		<Unit filename="/home/nvidia/CLionProjects/leaderfollowing/Statemechine.h">
+		<Unit filename="/home/nvidia/CLionProjects/Leader-following/Statemechine.cpp">
 			<Option target="leaderfollowing"/>
 		</Unit>
-		<Unit filename="/home/nvidia/CLionProjects/leaderfollowing/main.cpp">
+		<Unit filename="/home/nvidia/CLionProjects/Leader-following/Statemechine.h">
 			<Option target="leaderfollowing"/>
 		</Unit>
-		<Unit filename="/home/nvidia/CLionProjects/leaderfollowing/CMakeLists.txt">
+		<Unit filename="/home/nvidia/CLionProjects/Leader-following/main.cpp">
+			<Option target="leaderfollowing"/>
+		</Unit>
+		<Unit filename="/home/nvidia/CLionProjects/Leader-following/CMakeLists.txt">
 			<Option virtualFolder="CMake Files\"/>
 		</Unit>
 	</Project>

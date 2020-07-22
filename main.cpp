@@ -40,14 +40,15 @@ int Control_acceleration = 0;
 int Control_pressure = 0.5;
 
 //Define Statemechine
-int State = 2;
+int State = 0;
 bool Signal_emergency = 0;
 bool Command_ready = 0;
 bool Command_run = 0;
 bool Command_finish = 0;
 bool Command_end = 0;
 
-float err_integral = 0;
+int Desired_speed = 0;
+bool Show_switch = 0;
 
 int main()
 {

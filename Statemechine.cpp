@@ -30,7 +30,7 @@ void Statemechine::get_cmd(){
     cout << "Your instruction is: " << cmd << "\n";
 
     int i = 0;
-    char str_ready[] = "ready",str_run[] = "run",str_finish[] = "finish",str_end[] = "end",str_emergency[] = "e";
+    char str_ready[] = "ready",str_run[] = "run",str_finish[] = "finish",str_end[] = "end",str_emergency[] = "e",str_show[]="show";
 
     if (strcmp(cmd,str_ready)==0)
         i = 1;
@@ -42,6 +42,8 @@ void Statemechine::get_cmd(){
         i = 4;
     else if (strcmp(cmd,str_emergency)==0)
         i = 5;
+    else if (strcmp(cmd,str_show)==0)
+        i = 6;
 
     switch(i){
         case 1:{
@@ -58,6 +60,8 @@ void Statemechine::get_cmd(){
             Command_finish = 0;
             Command_end = 0;
             cout << "Run Command " << endl;
+            cout << "Please enter your desired speed:";
+            cin >> Desired_speed;
             break;
         }
         case 3:{
@@ -84,6 +88,10 @@ void Statemechine::get_cmd(){
             Command_end = 0;
             cout << "Emergency signal" << endl;
             break;
+        }
+        case 6:{
+            cout << "Print current state ... " << endl;
+            Show_switch = 1;
         }
         default:
             cout << "Please enter instruction.";

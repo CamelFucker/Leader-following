@@ -6,7 +6,11 @@
 
 #IncludeRegexTransform: 
 
-/home/nvidia/CLionProjects/leaderfollowing/Communication.h
+/home/nvidia/CLionProjects/Leader-following/Communication.cpp
+Leader_following.h
+/home/nvidia/CLionProjects/Leader-following/Leader_following.h
+
+/home/nvidia/CLionProjects/Leader-following/Communication.h
 stdio.h
 -
 stdlib.h
@@ -30,13 +34,13 @@ string.h
 string
 -
 
-/home/nvidia/CLionProjects/leaderfollowing/Control.cpp
+/home/nvidia/CLionProjects/Leader-following/Control.cpp
 Leader_following.h
-/home/nvidia/CLionProjects/leaderfollowing/Leader_following.h
+/home/nvidia/CLionProjects/Leader-following/Leader_following.h
 
-/home/nvidia/CLionProjects/leaderfollowing/Control.h
+/home/nvidia/CLionProjects/Leader-following/Control.h
 
-/home/nvidia/CLionProjects/leaderfollowing/Leader_following.h
+/home/nvidia/CLionProjects/Leader-following/Leader_following.h
 thread
 -
 mutex
@@ -52,11 +56,19 @@ ctime
 typeinfo
 -
 Communication.h
-/home/nvidia/CLionProjects/leaderfollowing/Communication.h
+/home/nvidia/CLionProjects/Leader-following/Communication.h
 Statemechine.h
-/home/nvidia/CLionProjects/leaderfollowing/Statemechine.h
+/home/nvidia/CLionProjects/Leader-following/Statemechine.h
 Control.h
-/home/nvidia/CLionProjects/leaderfollowing/Control.h
+/home/nvidia/CLionProjects/Leader-following/Control.h
 
-/home/nvidia/CLionProjects/leaderfollowing/Statemechine.h
+/home/nvidia/CLionProjects/Leader-following/Statemechine.cpp
+Leader_following.h
+/home/nvidia/CLionProjects/Leader-following/Leader_following.h
+
+/home/nvidia/CLionProjects/Leader-following/Statemechine.h
+
+/home/nvidia/CLionProjects/Leader-following/main.cpp
+Leader_following.h
+/home/nvidia/CLionProjects/Leader-following/Leader_following.h
 

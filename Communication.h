@@ -44,20 +44,12 @@
 class Communication{
 public:
     static void CAN0_update(); //send all signals
-    //static void CAN1_update();
-
     static void CAN_send(int *message_ptr,int id,int msg_length,bool EFF, int CAN_channel);
     static void CAN_receive(int id,int msg_length,bool EFF,int CAN_channel);
     static int * CAN_get_msg(int id,bool EFF,int CAN_channel);
 
 private:
-    //CAN_send func
-    //static int socket_word;
-    //static int nbytes;
-    //static struct sockaddr_can addr;
-    //static struct ifreq ifr;
-    //static struct can_frame frame[2];
-    //CAN_steer_msg
+
     static int * Con2CAN_steer(int steer_enable,int steer_angle,int steer_velocity);
     static int * Con2CAN_acc(int control_mode, int acc_value, int pressure_value);
 
