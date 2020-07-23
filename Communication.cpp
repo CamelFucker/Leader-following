@@ -217,21 +217,6 @@ int * Communication::CAN_get_msg(int id, bool EFF, int CAN_channel){
 }
 //get CAN message
 
-/*
-void Communication::CAN1_update(){
-    for(;;){
-        time_t can2_time;
-        can2_time = time(NULL);
-        Follower_velocity = 0;
-        Follower_acceleration = 0;
-        usleep(SAMPLE_TIME);
-        cout << "CAN2 data is updating..." << endl;
-        //cout << "CAN2 data is updating..." << "  Time is " << can2_time << endl;
-    }
-}
-*/
-// CAN1 update
-
 /********************************Convert value to CAN message************************************/
 int * Communication::Con2CAN_steer(int steer_enable,int steer_angle,int steer_velocity){
     static int msg_steer[8] = {0};
@@ -340,10 +325,13 @@ void Communication::CAN2Val_brake(int*CANmsg_brake,int msg_length){
     mutex mut;
     lock_guard<mutex> lock(mut);
     Leader_Brake_pedal_position = CANmsg_brake[1];
+    Leader_Actual_acc = (CANmsg_brake[3] * 256 + CANmsg_brake[2]);
+    /*
     if(CANmsg_brake[3] >= 0x80)
         Leader_Actual_acc = (CANmsg_brake[3] * 256 + CANmsg_brake[2]) - 0xFFFF - 1;
     else
         Leader_Actual_acc = (CANmsg_brake[3] * 256 + CANmsg_brake[2]);
+    */
     Leader_Speed = (CANmsg_brake[5] * 256 + CANmsg_brake[4]);
     Leader_Pressure = CANmsg_brake[6];
     //cout << "Leader_Speed = " << Leader_Speed << endl;

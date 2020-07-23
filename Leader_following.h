@@ -11,11 +11,11 @@
 #endif //LEADERFOLLOWING_LEADER_FOLLOWING_H
 
 #define SAMPLE_TIME 20000  //us
-#define EXPECTED_DISTANCE 10
+
 //Switch whether to print
 #define CAN_SEND_CHECK 0
-#define CAN_RECEIVE_CHECK 0
-#define STATE_VALUE_PRINT 1
+#define CAN_RECEIVE_CHECK 1
+#define STATE_VALUE_PRINT 0
 #define CONTROL_VALUE_PRINT 0
 
 
@@ -27,6 +27,7 @@
 #include <stdio.h>
 #include <ctime>
 #include <typeinfo>
+#include <string>
 
 #include "Communication.h"
 #include "Statemechine.h"

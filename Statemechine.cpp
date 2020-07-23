@@ -30,7 +30,7 @@ void Statemechine::get_cmd(){
     cout << "Your instruction is: " << cmd << "\n";
 
     int i = 0;
-    char str_ready[] = "ready",str_run[] = "run",str_finish[] = "finish",str_end[] = "end",str_emergency[] = "e",str_show[]="show";
+    char str_ready[] = "ready",str_run[] = "run",str_finish[] = "fi",str_end[] = "end",str_emergency[] = "e",str_show[]="show";
 
     if (strcmp(cmd,str_ready)==0)
         i = 1;
@@ -59,9 +59,20 @@ void Statemechine::get_cmd(){
             Command_run = 1;
             Command_finish = 0;
             Command_end = 0;
-            cout << "Run Command " << endl;
+            string str_speed;
+            cout << "Run Command, current desired speed is " << Desired_speed << " km/h." << endl;
             cout << "Please enter your desired speed:";
-            cin >> Desired_speed;
+            cin >> str_speed;
+            /*
+            try{
+
+            }
+             */
+            int input_speed = stoi(str_speed);
+            //cout << stoi(str_speed) << endl;//TODO:ADD ERROR HANDLING
+
+            if(input_speed > 0 && input_speed <= 30)
+                Desired_speed = input_speed;
             break;
         }
         case 3:{

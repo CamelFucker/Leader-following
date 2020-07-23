@@ -6,10 +6,6 @@
 
 #IncludeRegexTransform: 
 
-/home/nvidia/CLionProjects/Leader-following/Communication.cpp
-Leader_following.h
-/home/nvidia/CLionProjects/Leader-following/Leader_following.h
-
 /home/nvidia/CLionProjects/Leader-following/Communication.h
 stdio.h
 -
@@ -34,10 +30,6 @@ string.h
 string
 -
 
-/home/nvidia/CLionProjects/Leader-following/Control.cpp
-Leader_following.h
-/home/nvidia/CLionProjects/Leader-following/Leader_following.h
-
 /home/nvidia/CLionProjects/Leader-following/Control.h
 
 /home/nvidia/CLionProjects/Leader-following/Leader_following.h
@@ -55,6 +47,8 @@ ctime
 -
 typeinfo
 -
+string
+-
 Communication.h
 /home/nvidia/CLionProjects/Leader-following/Communication.h
 Statemechine.h
@@ -67,8 +61,4 @@ Leader_following.h
 /home/nvidia/CLionProjects/Leader-following/Leader_following.h
 
 /home/nvidia/CLionProjects/Leader-following/Statemechine.h
-
-/home/nvidia/CLionProjects/Leader-following/main.cpp
-Leader_following.h
-/home/nvidia/CLionProjects/Leader-following/Leader_following.h
 

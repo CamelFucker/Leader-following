@@ -29,23 +29,23 @@ void Control::Control_update(){
         float fangwei_angle = (float)(UWB_fangwei)/1.0; //degree
         float zitai_angle = (float)(UWB_zitai)/1.0; // degree
 
-        float leader_acc_pedal_position = (float)(Leader_ACC_pedal_position) * 0.4;
-        float leader_remote_position = (float)(Leader_Remote_position) * 0.4;
-        float leader_brake_pedal_position = (float)(Leader_Brake_pedal_position) * 0.01;
+        //float leader_acc_pedal_position = (float)(Leader_ACC_pedal_position) * 0.4;
+        //float leader_remote_position = (float)(Leader_Remote_position) * 0.4;
+        //float leader_brake_pedal_position = (float)(Leader_Brake_pedal_position) * 0.01;
         float leader_actual_acc = (float)(Leader_Actual_acc) * 0.1 - 15; //m/s^2
-        float leader_pressure = (float)(Leader_Pressure) * 0.01;
-        float leader_steering_wheel_angle = (float)(Leader_Steering_wheel_angle) * 0.1;
-        float leader_steering_wheel_speed = (float)(Leader_Steering_wheel_speed) * 4; //deg/s
+        //float leader_pressure = (float)(Leader_Pressure) * 0.01;
+        //float leader_steering_wheel_angle = (float)(Leader_Steering_wheel_angle) * 0.1;
+        //float leader_steering_wheel_speed = (float)(Leader_Steering_wheel_speed) * 4; //deg/s
         //float leader_steering_wheel_state = (float)(Leader_Steering_wheel_state) * ;
         //float leader_count = (float)(Leader_Count) * ;
         //float leader_check = (float)(Leader_Check) * ;
-        float leader_wheel_speed = (float)(Leader_Wheel_speed) * 0.01;
-        float leader_la_acc = (float)(Leader_La_acc) * 0.01; //m/s^2
-        float leader_yr_speed = (float)(Leader_Yr_speed) * 0.01; //rad/s
+        //float leader_wheel_speed = (float)(Leader_Wheel_speed) * 0.01;
+        //float leader_la_acc = (float)(Leader_La_acc) * 0.01; //m/s^2
+        //float leader_yr_speed = (float)(Leader_Yr_speed) * 0.01; //rad/s
         //float leader_target_gear = (float)(Leader_Target_gear) * ;
         //float leader_current_gear = (float)(Leader_Current_gear) * ;
-        float leader_acc_pedal = (float)(Leader_Acc_pedal) * 0.1;// deg
-        float leader_brake_pedal = (float)(Leader_Brake_pedal) * 0.1; //deg
+        //float leader_acc_pedal = (float)(Leader_Acc_pedal) * 0.1;// deg
+        //float leader_brake_pedal = (float)(Leader_Brake_pedal) * 0.1; //deg
 
         state_mut.unlock();
 
@@ -59,17 +59,16 @@ void Control::Control_update(){
         float control_steer;
         control_steer = Control::Caculate_steer(lat_distance,long_distance);// degree
         float control_acc;
-        control_acc = Control::Caculate_acc(leader_speed,follower_speed,leader_la_acc,long_distance); //m/s^2
+        control_acc = Control::Caculate_acc(leader_speed,follower_speed,leader_actual_acc,long_distance); //m/s^2
         float control_brake_pressure;
         control_brake_pressure = 0.5;
 
 
         if(STATE_VALUE_PRINT|Show_switch){
             //cout << "******** STATE VALUE ********" << endl;
-            //cout << "leader_speed = " << leader_speed << endl;
+            //cout << "leader_speed = " << leader_speed * 3.6<< endl;
             cout << "leader_acceleration = " << leader_actual_acc << endl;
             //cout << "follower_speed = " << follower_speed*3.6 << endl;
-            //cout << "follower_speed = " << Follower_Speed << endl;
             cout << "follower_acceleration = " << follower_la_acc << endl;
             //cout << "long_distance = " << long_distance << end                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                               l;
             //cout << "lat_distance = " << lat_distance << endl;
@@ -104,20 +103,18 @@ float Control::Caculate_steer(float lat_distance, float long_distance){
 
 float Control::Caculate_acc(float v1, float v2, float a1, float long_distance){
     float control_acc;
-    //control_acc = a1 + k_v * (v1 - v2) + k_d * (long_distance - EXPECTED_DISTANCE);
-    float desired_speed = 15/3.6;
-    float err = float(Desired_speed)/3.6 - v2;
-    PID pid_acc(0.5,0.1,0);
-    control_acc = pid_acc.pid_control(float(Desired_speed)/3.6,v2);
-    //err_integral += err;
-    //cout << "err = " << err << endl;
-    //cout << "v2 = " << v2 << endl;
-    // Keep velocity
-    //control_acc = K_P * err + K_I * err_integral; 
-    //cout << "K_v = " << to_string(k_v) << " and K_d = " << to_string(k_d) << endl;
-    if(control_acc > 0.5)
-        control_acc = 0.5; // acc limit
-    //cout << "Control_acceleration = "<< to_string(control_acc) << endl;
+    /********Speed Keep control********/
+    //PID pid_acc(0.5,0.1,0);
+    //control_acc = pid_acc.pid_control(float(Desired_speed)/3.6,v2);
+    /******Distance Keeping Control*****/
+    control_acc = k_a * a1 + k_v * (v1 - v2) + k_d * (long_distance - EXPECTED_DISTANCE);
+
+    //Saturation
+    if(control_acc > ACC_LIMIT)
+        control_acc = ACC_LIMIT; // acc limit
+    else if(control_acc < DEACC_LIMIT)
+        control_acc = DEACC_LIMIT; //deacc limit
+     // cout << "Control_acceleration = "<< to_string(control_acc) << endl;
     return control_acc;
 }
 
