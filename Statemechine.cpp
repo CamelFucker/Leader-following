@@ -59,21 +59,47 @@ void Statemechine::get_cmd(){
             Command_run = 1;
             Command_finish = 0;
             Command_end = 0;
-            string str_speed;
-            cout << "Run Command, current desired speed is " << Desired_speed << " km/h." << endl;
-            cout << "Please enter your desired speed:";
-            cin >> str_speed;
+            char run_mode[10];
+            char str_self[] = "s";
+            char str_follow[] = "f";
+            cout << "Run Command. Please select mode: self-mode(s) or follow-mode(f):" << endl;
+            cin >> run_mode;
+
+            if(strcmp(run_mode,str_self)==0){
+                Run_mode_switch = 0;
+                string str_speed;
+                cout << "Self Mode. Current desired speed is " << Desired_speed << " km/h." << endl;
+                cout << "Please enter your desired speed(0~30 km/h):";
+                cin >> str_speed;
+                int input_speed = stoi(str_speed);
+                if(input_speed >= 0 && input_speed <= 30)
+                    Desired_speed = input_speed;
+                break;
+            }//self mode
+            else if(strcmp(run_mode,str_follow)==0){
+                Run_mode_switch = 1;
+                string str_distance;
+                cout << "Follow Mode. Current desired distance is " << Desired_distance << "m" << endl;
+                cout << "Please enter your desired distance(10~40 m):";
+                cin >> str_distance;
+                int input_distance = stoi(str_distance);
+                if (input_distance >= 10 && input_distance <= 40)
+                    Desired_distance = input_distance;
+                break;
+            }//follow mode
+            else {
+                cout << "False instruction!" << endl;
+                break;
+            }
             /*
             try{
 
             }
              */
-            int input_speed = stoi(str_speed);
+
             //cout << stoi(str_speed) << endl;//TODO:ADD ERROR HANDLING
 
-            if(input_speed > 0 && input_speed <= 30)
-                Desired_speed = input_speed;
-            break;
+
         }
         case 3:{
             Command_ready = 0;
@@ -103,6 +129,7 @@ void Statemechine::get_cmd(){
         case 6:{
             cout << "Print current state ... " << endl;
             Show_switch = 1;
+            //TODO:Add keyboard event to stop print
         }
         default:
             cout << "Please enter instruction.";

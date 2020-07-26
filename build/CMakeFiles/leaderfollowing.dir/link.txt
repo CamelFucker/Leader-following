@@ -1,1 +1,1 @@
-/usr/bin/g++-7  -g  -rdynamic CMakeFiles/leaderfollowing.dir/main.o CMakeFiles/leaderfollowing.dir/Control.o CMakeFiles/leaderfollowing.dir/Communication.o CMakeFiles/leaderfollowing.dir/Statemechine.o  -o leaderfollowing -lpthread 
+/usr/local/gcc-8.1/bin/g++  -g  -rdynamic CMakeFiles/leaderfollowing.dir/main.o CMakeFiles/leaderfollowing.dir/Control.o CMakeFiles/leaderfollowing.dir/Communication.o CMakeFiles/leaderfollowing.dir/Statemechine.o  -o leaderfollowing -lpthread 

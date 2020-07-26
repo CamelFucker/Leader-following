@@ -1,13 +1,12 @@
 #define ACC_LIMIT 0.5
 #define DEACC_LIMIT -2
-#define EXPECTED_DISTANCE 10
 
 class Control{
     private:
         // args
-        static constexpr float k_a = 0.8;
-        static constexpr float k_v = 0.2;
-        static constexpr float k_d = 0.1;
+        static constexpr float k_a = 0.0;
+        static constexpr float k_v = 0.1;
+        static constexpr float k_d = 0.05;
         // float signal variable
         /*
         static float leader_speed;

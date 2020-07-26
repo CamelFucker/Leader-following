@@ -54,18 +54,18 @@ private:
     static int * Con2CAN_acc(int control_mode, int acc_value, int pressure_value);
 
     //CAN Receive
-    static void CAN2Val_acc(int *message_ptr,int msg_length);
-    static void CAN2Val_UWB_position(int *message_ptr,int msg_length);
-    static void CAN2Val_UWB_leaderstate(int *message_ptr,int msg_length);
-    static void CAN2Val_speed(int *message_ptr,int msg_length);
+    static void CAN2Val_acc(int *message_ptr);
+    static void CAN2Val_UWB_position(int *message_ptr);
+    static void CAN2Val_UWB_leaderstate(int *message_ptr);
+    static void CAN2Val_speed(int *message_ptr);
 
-    static void CAN2Val_acc_pedal(int *message_ptr,int msg_length);
-    static void CAN2Val_brake(int *message_ptr,int msg_length);
-    static void CAN2Val_steering_wheel(int *message_ptr,int msg_length);
-    static void CAN2Val_wheel(int *message_ptr,int msg_length);
-    static void CAN2Val_la_yr(int *message_ptr,int msg_length);
-    static void CAN2Val_gear_position(int *message_ptr,int msg_length);
-    static void CAN2Val_pedal_angle(int *message_ptr,int msg_length);
+    static void CAN2Val_acc_pedal(int *message_ptr);
+    static void CAN2Val_brake(int *message_ptr);
+    static void CAN2Val_steering_wheel(int *message_ptr);
+    static void CAN2Val_wheel(int *message_ptr);
+    static void CAN2Val_la_yr(int *message_ptr);
+    static void CAN2Val_gear_position(int *message_ptr);
+    static void CAN2Val_pedal_angle(int *message_ptr);
 
 };
 

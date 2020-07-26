@@ -1,22 +1,22 @@
 [
 {
   "directory": "/home/nvidia/CLionProjects/Leader-following/build",
-  "command": "/usr/bin/g++-7    -g   -std=gnu++11 -o CMakeFiles/leaderfollowing.dir/main.o -c /home/nvidia/CLionProjects/Leader-following/main.cpp",
+  "command": "/usr/local/gcc-8.1/bin/g++    -g   -std=gnu++11 -o CMakeFiles/leaderfollowing.dir/main.o -c /home/nvidia/CLionProjects/Leader-following/main.cpp",
   "file": "/home/nvidia/CLionProjects/Leader-following/main.cpp"
 },
 {
   "directory": "/home/nvidia/CLionProjects/Leader-following/build",
-  "command": "/usr/bin/g++-7    -g   -std=gnu++11 -o CMakeFiles/leaderfollowing.dir/Control.o -c /home/nvidia/CLionProjects/Leader-following/Control.cpp",
+  "command": "/usr/local/gcc-8.1/bin/g++    -g   -std=gnu++11 -o CMakeFiles/leaderfollowing.dir/Control.o -c /home/nvidia/CLionProjects/Leader-following/Control.cpp",
   "file": "/home/nvidia/CLionProjects/Leader-following/Control.cpp"
 },
 {
   "directory": "/home/nvidia/CLionProjects/Leader-following/build",
-  "command": "/usr/bin/g++-7    -g   -std=gnu++11 -o CMakeFiles/leaderfollowing.dir/Communication.o -c /home/nvidia/CLionProjects/Leader-following/Communication.cpp",
+  "command": "/usr/local/gcc-8.1/bin/g++    -g   -std=gnu++11 -o CMakeFiles/leaderfollowing.dir/Communication.o -c /home/nvidia/CLionProjects/Leader-following/Communication.cpp",
   "file": "/home/nvidia/CLionProjects/Leader-following/Communication.cpp"
 },
 {
   "directory": "/home/nvidia/CLionProjects/Leader-following/build",
-  "command": "/usr/bin/g++-7    -g   -std=gnu++11 -o CMakeFiles/leaderfollowing.dir/Statemechine.o -c /home/nvidia/CLionProjects/Leader-following/Statemechine.cpp",
+  "command": "/usr/local/gcc-8.1/bin/g++    -g   -std=gnu++11 -o CMakeFiles/leaderfollowing.dir/Statemechine.o -c /home/nvidia/CLionProjects/Leader-following/Statemechine.cpp",
   "file": "/home/nvidia/CLionProjects/Leader-following/Statemechine.cpp"
 }
 ]

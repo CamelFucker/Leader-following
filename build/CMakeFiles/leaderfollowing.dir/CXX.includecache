@@ -55,6 +55,8 @@ ctime
 -
 typeinfo
 -
+string
+-
 Communication.h
 /home/nvidia/CLionProjects/Leader-following/Communication.h
 Statemechine.h

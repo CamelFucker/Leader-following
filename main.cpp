@@ -40,7 +40,7 @@ int Control_acceleration = 0;
 int Control_pressure = 0.5;
 
 //Define Statemechine
-int State = 0;
+int State = 2;
 bool Signal_emergency = 0;
 bool Command_ready = 0;
 bool Command_run = 0;
@@ -48,7 +48,9 @@ bool Command_finish = 0;
 bool Command_end = 0;
 
 int Desired_speed = 0;
+int Desired_distance = 30;
 bool Show_switch = 0;
+bool Run_mode_switch = 1;
 
 int main()
 {

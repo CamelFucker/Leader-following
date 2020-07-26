@@ -5,19 +5,15 @@
 #ifndef LEADERFOLLOWING_LEADER_FOLLOWING_H
 #define LEADERFOLLOWING_LEADER_FOLLOWING_H
 
-
-
-
 #endif //LEADERFOLLOWING_LEADER_FOLLOWING_H
 
 #define SAMPLE_TIME 20000  //us
 
 //Switch whether to print
 #define CAN_SEND_CHECK 0
-#define CAN_RECEIVE_CHECK 1
-#define STATE_VALUE_PRINT 0
-#define CONTROL_VALUE_PRINT 0
-
+#define CAN_RECEIVE_CHECK 0
+#define STATE_VALUE_PRINT 1
+#define CONTROL_VALUE_PRINT 1
 
 #include <thread>
 #include <mutex>
@@ -81,4 +77,6 @@ extern bool Command_finish;
 extern bool Command_end;
 
 extern int Desired_speed;
+extern int Desired_distance;
 extern bool Show_switch;
+extern bool Run_mode_switch;

@@ -59,7 +59,7 @@ void Control::Control_update(){
         float control_steer;
         control_steer = Control::Caculate_steer(lat_distance,long_distance);// degree
         float control_acc;
-        control_acc = Control::Caculate_acc(leader_speed,follower_speed,leader_actual_acc,long_distance); //m/s^2
+        control_acc = Control::Caculate_acc(leader_speed,follower_speed,leader_actual_acc,distance); //m/s^2
         float control_brake_pressure;
         control_brake_pressure = 0.5;
 
@@ -67,11 +67,11 @@ void Control::Control_update(){
         if(STATE_VALUE_PRINT|Show_switch){
             //cout << "******** STATE VALUE ********" << endl;
             //cout << "leader_speed = " << leader_speed * 3.6<< endl;
-            cout << "leader_acceleration = " << leader_actual_acc << endl;
+            //cout << "leader_acceleration = " << leader_actual_acc << endl;
             //cout << "follower_speed = " << follower_speed*3.6 << endl;
-            cout << "follower_acceleration = " << follower_la_acc << endl;
-            //cout << "long_distance = " << long_distance << end                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                               l;
-            //cout << "lat_distance = " << lat_distance << endl;
+            //cout << "follower_acceleration = " << follower_la_acc << endl;
+            cout << "long_distance = " << long_distance << endl; 
+            cout << "lat_distance = " << lat_distance << endl;
         }
 //"Control is updcandumpating" << "  Time is " << control_time << endl;
         if(CONTROL_VALUE_PRINT|Show_switch){
@@ -103,12 +103,19 @@ float Control::Caculate_steer(float lat_distance, float long_distance){
 
 float Control::Caculate_acc(float v1, float v2, float a1, float long_distance){
     float control_acc;
-    /********Speed Keep control********/
-    //PID pid_acc(0.5,0.1,0);
-    //control_acc = pid_acc.pid_control(float(Desired_speed)/3.6,v2);
-    /******Distance Keeping Control*****/
-    control_acc = k_a * a1 + k_v * (v1 - v2) + k_d * (long_distance - EXPECTED_DISTANCE);
-
+    if(Run_mode_switch == 0){
+        /********Speed Keep control********/
+        PID pid_acc(0.5,0.1,0);
+        control_acc = pid_acc.pid_control(float(Desired_speed)/3.6,v2);
+    }
+    else{
+        /******Distance Keeping Control*****/
+        cout << "a = " << a1 << endl;
+        cout << "delta v = " << v1-v2 << endl;
+        cout << "delta x = " << long_distance - Desired_distance << endl; 
+        control_acc = k_a * a1 + k_v * (v1 - v2) + k_d * (long_distance - Desired_distance);
+        //control_acc = 0.05 * (long_distance - Desired_distance);
+    }
     //Saturation
     if(control_acc > ACC_LIMIT)
         control_acc = ACC_LIMIT; // acc limit
