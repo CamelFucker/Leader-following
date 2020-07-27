@@ -1,11 +1,11 @@
 #define ACC_LIMIT 0.5
-#define DEACC_LIMIT -2
+#define DEACC_LIMIT -4
 
 class Control{
     private:
         // args
-        static constexpr float k_a = 0.0;
-        static constexpr float k_v = 0.1;
+        static constexpr float k_a = 0.1;
+        static constexpr float k_v = 0.05;
         static constexpr float k_d = 0.05;
         // float signal variable
         /*
@@ -23,8 +23,7 @@ class Control{
         float follower_la_acc;
         float fangwei_angle;
         float zitai_angle;
-
-
+        
         float leader_acc_pedal_position;
         float leader_remote_position;
         float leader_brake_pedal_position;
@@ -53,8 +52,8 @@ class Control{
         float control_acc;
         float control_brake_pressure;
         // vehicle parads
-        static const int L = 5;
-        static const int r = 1;
+        static constexpr float L = 5.0;
+        static constexpr float r = 1.0;
 
     public:
         //Control();

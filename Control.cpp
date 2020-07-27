@@ -32,7 +32,7 @@ void Control::Control_update(){
         //float leader_acc_pedal_position = (float)(Leader_ACC_pedal_position) * 0.4;
         //float leader_remote_position = (float)(Leader_Remote_position) * 0.4;
         //float leader_brake_pedal_position = (float)(Leader_Brake_pedal_position) * 0.01;
-        float leader_actual_acc = (float)(Leader_Actual_acc) * 0.1 - 15; //m/s^2
+        float leader_actual_acc = (float)(Leader_Actual_acc)*0.1 - 15; //m/s^2
         //float leader_pressure = (float)(Leader_Pressure) * 0.01;
         //float leader_steering_wheel_angle = (float)(Leader_Steering_wheel_angle) * 0.1;
         //float leader_steering_wheel_speed = (float)(Leader_Steering_wheel_speed) * 4; //deg/s
@@ -59,7 +59,7 @@ void Control::Control_update(){
         float control_steer;
         control_steer = Control::Caculate_steer(lat_distance,long_distance);// degree
         float control_acc;
-        control_acc = Control::Caculate_acc(leader_speed,follower_speed,leader_actual_acc,distance); //m/s^2
+        control_acc = Control::Caculate_acc(leader_speed,follower_speed,leader_actual_acc,long_distance); //m/s^2
         float control_brake_pressure;
         control_brake_pressure = 0.5;
 
@@ -110,10 +110,15 @@ float Control::Caculate_acc(float v1, float v2, float a1, float long_distance){
     }
     else{
         /******Distance Keeping Control*****/
+        
         cout << "a = " << a1 << endl;
         cout << "delta v = " << v1-v2 << endl;
         cout << "delta x = " << long_distance - Desired_distance << endl; 
+        
+        
         control_acc = k_a * a1 + k_v * (v1 - v2) + k_d * (long_distance - Desired_distance);
+        if(control_acc < 0)
+            control_acc = control_acc * 3;
         //control_acc = 0.05 * (long_distance - Desired_distance);
     }
     //Saturation

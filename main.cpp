@@ -7,13 +7,13 @@ int UWB_fangwei = 0 ;
 int UWB_zitai = 0 ;
 
 int Follower_Speed = 0 ;
-int Follower_La_acc = 0 ;
+int Follower_La_acc = 150 ;
 
 //Define and initialize signals from leader
 int Leader_ACC_pedal_position = 0;
 int Leader_Remote_position = 0;
 int Leader_Brake_pedal_position = 0;
-int Leader_Actual_acc = 0;
+int Leader_Actual_acc = 150;
 int Leader_Speed = 0;
 
 int Leader_Pressure = 0;

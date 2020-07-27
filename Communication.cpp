@@ -14,9 +14,9 @@ void Communication::CAN0_update(){
                 break;
             }
             case READY_STATE:{
-                Communication::CAN_send(Con2CAN_steer(0,32767,100),
+                Communication::CAN_send(Con2CAN_steer(0,32000,100),
                                         CONTROL_STEER_MSG);
-                Communication::CAN_send(Con2CAN_acc(1,130,0),
+                Communication::CAN_send(Con2CAN_acc(1,100,0),
                                         CONTROL_ACC_MSG);
                 usleep(SAMPLE_TIME);
                 //cout << "[READY STATE]CAN0 data is updating..." << endl;
@@ -25,8 +25,9 @@ void Communication::CAN0_update(){
             case RUN_STATE:{
                 mutex mut;
                 mut.lock();
-                Communication::CAN_send(Con2CAN_steer(0,Control_steer_angle,Control_steer_velocity),
-                                        CONTROL_STEER_MSG);
+                if((Control_steer_angle > 32767-5000) && (Control_steer_angle < 32767+5000))
+                    Communication::CAN_send(Con2CAN_steer(1,Control_steer_angle,Control_steer_velocity),
+                                            CONTROL_STEER_MSG);
                 if(Control_acceleration > 50 && Control_acceleration < 250)
                     Communication::CAN_send(Con2CAN_acc(Control_mode,Control_acceleration,Control_pressure),
                                             CONTROL_ACC_MSG);
@@ -38,7 +39,7 @@ void Communication::CAN0_update(){
             case FINISH_STATE:{
                 Communication::CAN_send(Con2CAN_steer(0,32767,100),
                                         CONTROL_STEER_MSG);
-                Communication::CAN_send(Con2CAN_acc(1,130,0),
+                Communication::CAN_send(Con2CAN_acc(1,100,0),
                                         CONTROL_ACC_MSG);
                 usleep(SAMPLE_TIME);
                 //cout << "[RUN STATE]CAN0 data is updating..." << endl;
@@ -232,14 +233,20 @@ int * Communication::Con2CAN_steer(int steer_enable,int steer_angle,int steer_ve
 int * Communication::Con2CAN_acc(int control_mode,int acc_value, int pressure_value){
     static int msg_acc[8] = {0};
     static int loop_number = 0;
-    if(acc_value > 150){
-        control_mode = 2;
-    }
-    else if(acc_value < 150){
-        control_mode = 1;
-    }
-    else control_mode = 0;
+    if(control_mode == 0)
+        ;
+        else{
+            if(acc_value > 150){
+                control_mode = 2;
+                }
+                else if(acc_value < 150){
+                    control_mode = 1;
+                }
+                else control_mode = 0;
+        }
     msg_acc[2] = control_mode * 16;
+    cout << "acc value = " << acc_value << endl;
+    cout << "Control Mode = " << control_mode << endl;
     if(control_mode==0){//mode 0:No Brake
         msg_acc[0] = 0;
         msg_acc[1] = 0;
@@ -263,7 +270,7 @@ int * Communication::Con2CAN_acc(int control_mode,int acc_value, int pressure_va
 void Communication::CAN2Val_acc(int *CANmsg_acc){
     int origin_follower_acc;
     origin_follower_acc = CANmsg_acc[1] + CANmsg_acc[2] * 256;//[0,300]
-    if(origin_follower_acc>50 && origin_follower_acc<150 && origin_follower_acc-Follower_La_acc<80 && origin_follower_acc-Follower_La_acc>-80)
+    if(origin_follower_acc>50 && origin_follower_acc<250 && origin_follower_acc-Follower_La_acc<80 && origin_follower_acc-Follower_La_acc>-80)
         Follower_La_acc = origin_follower_acc;
 }
 //Convert CANmsg to follower acc value
@@ -311,7 +318,7 @@ void Communication::CAN2Val_speed(int*CANmsg_speed){
     int origin_follower_speed;
     origin_follower_speed = CANmsg_speed[3] + CANmsg_speed[4] * 256;//[0,800]
     if(origin_follower_speed<200 && origin_follower_speed-Follower_Speed<80 && origin_follower_speed-Follower_Speed>-80)
-    Follower_Speed = origin_follower_speed;
+        Follower_Speed = origin_follower_speed;
 }
 
 void Communication::CAN2Val_acc_pedal(int*CANmsg_acc_pedal){
@@ -328,13 +335,16 @@ void Communication::CAN2Val_brake(int*CANmsg_brake){
     Leader_Brake_pedal_position = CANmsg_brake[1];
     int origin_leader_acc;
     origin_leader_acc = CANmsg_brake[2] + CANmsg_brake[3] * 256;//[0,300]
-    if(origin_leader_acc>50 && origin_leader_acc<150 && origin_leader_acc-Leader_Actual_acc<80 && origin_leader_acc-Leader_Actual_acc>-80)
-    Leader_Actual_acc = origin_leader_acc;
+    //cout << "origin_leader_acc = " << origin_leader_acc << endl;
+    if(origin_leader_acc>50 && origin_leader_acc<250 && origin_leader_acc-Leader_Actual_acc<80 && origin_leader_acc-Leader_Actual_acc>-80){
+        Leader_Actual_acc = origin_leader_acc;
+        //cout << "Yes " << Leader_Actual_acc << endl; 
+    }
 
     int origin_leader_speed;
     origin_leader_speed = CANmsg_brake[4] + CANmsg_brake[5] * 256;//[0,800]
     if(origin_leader_speed<200 && origin_leader_speed-Leader_Speed<80 && origin_leader_speed-Leader_Speed>-80)
-    Leader_Speed = origin_leader_speed;
+        Leader_Speed = origin_leader_speed;
 
     Leader_Pressure = CANmsg_brake[6];
     //cout << "Leader_Speed = " << Leader_Speed << endl;
@@ -358,7 +368,6 @@ void Communication::CAN2Val_wheel(int*CANmsg_wheel_speed){
     lock_guard<mutex> lock(mut);
     Leader_Wheel_speed = CANmsg_wheel_speed[3] * (256 * 256) + CANmsg_wheel_speed[2] * 256 + CANmsg_wheel_speed[1];
 }
-
 void Communication::CAN2Val_la_yr(int*CANmsg_la_yr){
     mutex mut;
     lock_guard<mutex> lock(mut);
