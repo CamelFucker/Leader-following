@@ -14,43 +14,55 @@ void Communication::CAN0_update(){
                 break;
             }
             case READY_STATE:{
+                control_mut.lock();
                 Communication::CAN_send(Con2CAN_steer(0,32000,100),
                                         CONTROL_STEER_MSG);
                 Communication::CAN_send(Con2CAN_acc(1,100,0),
                                         CONTROL_ACC_MSG);
+                control_mut.unlock();
                 usleep(SAMPLE_TIME);
                 //cout << "[READY STATE]CAN0 data is updating..." << endl;
                 break;
             }
             case RUN_STATE:{
-                mutex mut;
-                mut.lock();
-                if((Control_steer_angle > 32767-5000) && (Control_steer_angle < 32767+5000))
+                control_mut.lock();
+
+                if((Control_steer_angle > 32767-5000) && (Control_steer_angle < 32767+5000)){
+                    //cout<<"angle";
                     Communication::CAN_send(Con2CAN_steer(1,Control_steer_angle,Control_steer_velocity),
                                             CONTROL_STEER_MSG);
-                if(Control_acceleration > 50 && Control_acceleration < 250)
+                }
+
+                if(Control_acceleration > 50 && Control_acceleration < 250){
+                    //cout<<"acc";
                     Communication::CAN_send(Con2CAN_acc(Control_mode,Control_acceleration,Control_pressure),
                                             CONTROL_ACC_MSG);
-                mut.unlock();
+                }
+                //cout<<
+                control_mut.unlock();
                 usleep(SAMPLE_TIME);
                 //cout << "[RUN STATE]CAN0 data is updating..." << endl;
                 break;
             }
             case FINISH_STATE:{
+                control_mut.lock();
                 Communication::CAN_send(Con2CAN_steer(0,32767,100),
                                         CONTROL_STEER_MSG);
                 Communication::CAN_send(Con2CAN_acc(1,100,0),
                                         CONTROL_ACC_MSG);
+                control_mut.lock();
                 usleep(SAMPLE_TIME);
                 //cout << "[RUN STATE]CAN0 data is updating..." << endl;
                 break;
                 
             }
             default:{
+                control_mut.lock();
                 Communication::CAN_send(Con2CAN_steer(0,Control_steer_angle,Control_steer_velocity),
                                         CONTROL_STEER_MSG);
                 Communication::CAN_send(Con2CAN_acc(1,130,0),
                                         CONTROL_ACC_MSG);
+                control_mut.unlock();
                 usleep(SAMPLE_TIME);
                 //Test mode
                 //cout << "[DRIVER MODE]CAN0 data is not updating..." << endl;
@@ -68,8 +80,17 @@ void Communication::CAN0_update(){
 void Communication::CAN_receive(int id,int msg_length,bool EFF,int CAN_channel){
     for(;;){
         if(id == VEHICLE_ACC_ID){
-            CAN2Val_acc(CAN_get_msg(id,EFF,CAN_channel));
-            CAN2Val_speed(CAN_get_msg(id,EFF,CAN_channel));
+            static int CAN_msg[9] = {0};
+            //CAN2Val_acc(CAN_get_msg(id,EFF,CAN_channel,CAN_msg));
+           // CAN2Val_speed(CAN_get_msg(id,EFF,CAN_channel,CAN_msg));
+            CAN_get_msg(id,EFF,CAN_channel,CAN_msg);
+            if(CAN_msg[8]==1){
+                continue;
+            }
+            else{
+                CAN2Val_acc(CAN_msg);
+                CAN2Val_speed(CAN_msg);
+            }
             usleep(SAMPLE_TIME);
         }
         //else if(id == VEHICLE_SPEED_ID){
@@ -77,11 +98,20 @@ void Communication::CAN_receive(int id,int msg_length,bool EFF,int CAN_channel){
         //    usleep(SAMPLE_TIME);
         //}
         else if(id == UWB_POSITION_ID){
-            CAN2Val_UWB_position(CAN_get_msg(id,EFF,CAN_channel));
+            static int CAN_msg[9] = {0};
+            //CAN2Val_UWB_position(CAN_get_msg(id,EFF,CAN_channel,CAN_msg));
+            CAN_get_msg(id,EFF,CAN_channel,CAN_msg);
+            if(CAN_msg[8]==1){
+                continue;
+            }
+            else{
+                CAN2Val_UWB_position(CAN_msg);
+            }
             usleep(SAMPLE_TIME);
         }
         else if(id == UWB_LEADERSTATE_ID){
-            CAN2Val_UWB_leaderstate(CAN_get_msg(id,EFF,CAN_channel));
+            static int CAN_msg[9] = {0};
+            CAN2Val_UWB_leaderstate(CAN_get_msg(id,EFF,CAN_channel,CAN_msg));
             //usleep(SAMPLE_TIME/16);
         }
     }
@@ -119,8 +149,11 @@ void Communication::CAN_send(int *message_ptr,int id,int msg_length,bool EFF, in
     frame[0].can_dlc = msg_length;//Message Length
 
     //CAN message
-    for(int i=0;i<msg_length;i++)
+    for(int i=0;i<msg_length;i++){
         frame[0].data[i] = *(message_ptr+i);
+        //printf("%X",frame[0].data[i]);
+    }
+    //cout<<endl;
 
 
     //Send CAN message
@@ -149,7 +182,7 @@ void Communication::CAN_send(int *message_ptr,int id,int msg_length,bool EFF, in
 }
 //Send a certain ID CANmsg
 
-int * Communication::CAN_get_msg(int id, bool EFF, int CAN_channel){
+int * Communication::CAN_get_msg(int id, bool EFF, int CAN_channel,int *CAN_msg){
     //cout << "Receiving ID " << id << " ..." << endl;
 
     /***********************Sockek_CAN config*****************************/
@@ -158,8 +191,6 @@ int * Communication::CAN_get_msg(int id, bool EFF, int CAN_channel){
     struct ifreq ifr;
     struct can_frame frame;
     struct can_filter rfliter[1];
-    mutex mut;
-    mut.lock();
     socket_word = socket(PF_CAN, SOCK_RAW, CAN_RAW);
 
     //Choose CAN channel
@@ -201,9 +232,12 @@ int * Communication::CAN_get_msg(int id, bool EFF, int CAN_channel){
             cout << "(UWB leader state)";
         cout << " CAN ID 0x" << hex << id << ": ";
     }
-
-    static int CAN_msg[8] = {0};
-
+    msg_mut.lock();
+    //static int CAN_msg[8] = {0};
+    CAN_msg[8]=1;
+    if( (id%65536) == (frame.can_id%65536)){
+        CAN_msg[8]=0;
+    }
     for (int i=0;i<8;i++){
         CAN_msg[i] = (int)frame.data[i];
         if(CAN_RECEIVE_CHECK|Show_switch)
@@ -213,7 +247,7 @@ int * Communication::CAN_get_msg(int id, bool EFF, int CAN_channel){
         cout << endl;
 
     close(socket_word);
-    mut.unlock();
+    msg_mut.unlock();
     return CAN_msg;
     //TODO:necessay to set socket every time?
 }
@@ -248,7 +282,7 @@ int * Communication::Con2CAN_acc(int control_mode,int acc_value, int pressure_va
     cout << "acc value = " << acc_value << endl;
     cout << "Control Mode = " << control_mode << endl;
     if(control_mode==0){//mode 0:No Brake
-        msg_acc[0] = 0;
+        msg_acc[0] = 150;
         msg_acc[1] = 0;
     }
     else if(control_mode==2){//mode 1:Require deacc
@@ -277,6 +311,8 @@ void Communication::CAN2Val_acc(int *CANmsg_acc){
 
 void Communication::CAN2Val_UWB_position(int*CANmsg_UWB){
     UWB_distance = 256 * CANmsg_UWB[3] + CANmsg_UWB[2];
+    //cout<<"dis="<<UWB_distance<<endl;
+
     if (CANmsg_UWB[5] >= 0x80)
     {
         UWB_fangwei = 256 * CANmsg_UWB[5] + CANmsg_UWB[4] - 65536;
@@ -284,6 +320,7 @@ void Communication::CAN2Val_UWB_position(int*CANmsg_UWB){
     else {
         UWB_fangwei = 256 * CANmsg_UWB[5] + CANmsg_UWB[4];
     }
+    //cout<<"fangwei="<<UWB_fangwei<<endl;
     if (CANmsg_UWB[7] >= 0x80)
     {
         UWB_zitai = 256 * CANmsg_UWB[7] + CANmsg_UWB[6] - 65536;
@@ -385,8 +422,8 @@ void Communication::CAN2Val_gear_position(int*CANmsg_gear_position){
 void Communication::CAN2Val_pedal_angle(int*CANmsg_pedal_angle){
     mutex mut;
     lock_guard<mutex> lock(mut);
-    Leader_Acc_pedal = CANmsg_pedal_angle[1] + CANmsg_pedal_angle[2] * 256;
-    Leader_Brake_pedal = CANmsg_pedal_angle[6] + CANmsg_pedal_angle[7] * 256;
+    Leader_Acc_pedal = CANmsg_pedal_angle[3] + CANmsg_pedal_angle[4] * 256;
+    Leader_Brake_pedal = CANmsg_pedal_angle[1] + CANmsg_pedal_angle[2] * 256;
 }
 
 //Convert CANmsg to follower speed

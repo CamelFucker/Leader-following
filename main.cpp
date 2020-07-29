@@ -48,9 +48,12 @@ bool Command_finish = 0;
 bool Command_end = 0;
 
 int Desired_speed = 0;
-int Desired_distance = 30;
+int Desired_distance = 20;
 bool Show_switch = 0;
 bool Run_mode_switch = 1;
+
+mutex control_mut;
+mutex msg_mut;
 
 int main()
 {
@@ -61,16 +64,13 @@ int main()
     thread th0(&follower_state_mechine.state_transition);
     thread th1(&follower_communication.CAN_receive,UWB_POSITION_MSG);//receive UWB position (args:ID CANchannel)
     thread th2(&follower_communication.CAN_receive,UWB_LEADERSTATE_MSG);//receive UWB leader_state
-    //thread th3(&follower_communication.CAN_receive,VEHICLE_SPEED_MSG);//receive follower speed
     thread th6(&follower_communication.CAN_receive,VEHICLE_ACC_MSG);//receive follower ACC
-
     thread th4(&follower_control.Control_update);//control signal update
     thread th5(&follower_communication.CAN0_update);//send control signals
 
     th0.join();
     th1.join();
     th2.join();
-    //th3.join();
     th6.join();
     th4.join();
     th5.join();

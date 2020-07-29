@@ -8,7 +8,7 @@ using namespace std;
 
 void Control::Control_update(){
     for(;;){
-
+        control_mut.lock();
         //cout << "UWB_distance = " << dec << UWB_distance << endl;
         //cout << "UWB_fangwei = " << dec << UWB_fangwei  << endl;
         //cout << "UWB_zitai = " << dec << UWB_zitai << endl;
@@ -44,11 +44,10 @@ void Control::Control_update(){
         //float leader_yr_speed = (float)(Leader_Yr_speed) * 0.01; //rad/s
         //float leader_target_gear = (float)(Leader_Target_gear) * ;
         //float leader_current_gear = (float)(Leader_Current_gear) * ;
-        //float leader_acc_pedal = (float)(Leader_Acc_pedal) * 0.1;// deg
-        //float leader_brake_pedal = (float)(Leader_Brake_pedal) * 0.1; //deg
+        float leader_acc_pedal = (float)(Leader_Acc_pedal);// %
+        float leader_brake_pedal = (float)(Leader_Brake_pedal); //%
 
         state_mut.unlock();
-
 
         // Caculate middle variables
 
@@ -59,7 +58,7 @@ void Control::Control_update(){
         float control_steer;
         control_steer = Control::Caculate_steer(lat_distance,long_distance);// degree
         float control_acc;
-        control_acc = Control::Caculate_acc(leader_speed,follower_speed,leader_actual_acc,long_distance); //m/s^2
+        control_acc = Control::Caculate_acc(leader_speed,follower_speed,leader_actual_acc,distance); //m/s^2
         float control_brake_pressure;
         control_brake_pressure = 0.5;
 
@@ -70,16 +69,16 @@ void Control::Control_update(){
             //cout << "leader_acceleration = " << leader_actual_acc << endl;
             //cout << "follower_speed = " << follower_speed*3.6 << endl;
             //cout << "follower_acceleration = " << follower_la_acc << endl;
-            cout << "long_distance = " << long_distance << endl; 
-            cout << "lat_distance = " << lat_distance << endl;
+            //cout << "long_distance = " << long_distance << endl; 
+            //cout << "lat_distance = " << lat_distance << endl;
+            cout << "distance = " << distance << endl;
         }
 //"Control is updcandumpating" << "  Time is " << control_time << endl;
         if(CONTROL_VALUE_PRINT|Show_switch){
             cout << "control acc = " << control_acc << endl;
             //cout << "control steer = " << control_steer << endl;
         }
-        mutex control_mut;
-        control_mut.lock();
+
         Control_steer_angle = (int)((control_steer + 3276.7)/0.1); // Signal value = (physical value - offset)/precision value
         Control_acceleration = (int)((control_acc + 15)/0.1); //[-15,15] m/s^2
         Control_pressure = (int)((control_brake_pressure)/0.01); // [0,1]MPa
@@ -111,16 +110,21 @@ float Control::Caculate_acc(float v1, float v2, float a1, float long_distance){
     else{
         /******Distance Keeping Control*****/
         
-        cout << "a = " << a1 << endl;
-        cout << "delta v = " << v1-v2 << endl;
-        cout << "delta x = " << long_distance - Desired_distance << endl; 
+        //cout << "a = " << a1 << endl;
+        //cout << "delta v = " << v1-v2 << endl;
+        //cout << "delta x = " << long_distance - Desired_distance << endl; 
         
-        
-        control_acc = k_a * a1 + k_v * (v1 - v2) + k_d * (long_distance - Desired_distance);
+        float distance_error = long_distance - float(Desired_distance);
+        if(distance_error < 10 && distance_error > -5)
+            control_acc = k_a * a1 + k_v * (v1 - v2) + k_d * distance_error;
+        else
+            control_acc = k_a * a1/2 + k_v * (v1 - v2)/2 + k_d * distance_error * 2;
+
         if(control_acc < 0)
-            control_acc = control_acc * 3;
+            control_acc = control_acc * 4;
         //control_acc = 0.05 * (long_distance - Desired_distance);
     }
+
     //Saturation
     if(control_acc > ACC_LIMIT)
         control_acc = ACC_LIMIT; // acc limit

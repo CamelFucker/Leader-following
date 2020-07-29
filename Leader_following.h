@@ -80,3 +80,5 @@ extern int Desired_speed;
 extern int Desired_distance;
 extern bool Show_switch;
 extern bool Run_mode_switch;
+extern std::mutex control_mut;
+extern std::mutex msg_mut;

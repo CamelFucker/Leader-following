@@ -46,7 +46,7 @@ public:
     static void CAN0_update(); //send all signals
     static void CAN_send(int *message_ptr,int id,int msg_length,bool EFF, int CAN_channel);
     static void CAN_receive(int id,int msg_length,bool EFF,int CAN_channel);
-    static int * CAN_get_msg(int id,bool EFF,int CAN_channel);
+    static int * CAN_get_msg(int id,bool EFF,int CAN_channel,int *CAN_msg);
 
 private:
 
@@ -66,6 +66,5 @@ private:
     static void CAN2Val_la_yr(int *message_ptr);
     static void CAN2Val_gear_position(int *message_ptr);
     static void CAN2Val_pedal_angle(int *message_ptr);
-
 };
 

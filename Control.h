@@ -7,8 +7,15 @@ class Control{
         static constexpr float k_a = 0.1;
         static constexpr float k_v = 0.05;
         static constexpr float k_d = 0.05;
-        // float signal variable
+
         /*
+        static constexpr float k_a1 = 0.2;
+        static constexpr float k_v1 = 0.1;
+        static constexpr float k_d1 = 0.1;
+        */
+
+        // float signal variable
+        /*nvidia
         static float leader_speed;
         static float follower_speed;
         static float leader_la_acc;
