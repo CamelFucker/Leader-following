@@ -35,6 +35,7 @@ void Communication::CAN0_update(){
 
                 if(Control_acceleration > 50 && Control_acceleration < 250){
                     //cout<<"acc";
+                    //cout << "lll " << Control_acceleration << endl;
                     Communication::CAN_send(Con2CAN_acc(Control_mode,Control_acceleration,Control_pressure),
                                             CONTROL_ACC_MSG);
                 }

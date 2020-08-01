@@ -44,8 +44,8 @@ void Control::Control_update(){
         //float leader_yr_speed = (float)(Leader_Yr_speed) * 0.01; //rad/s
         //float leader_target_gear = (float)(Leader_Target_gear) * ;
         //float leader_current_gear = (float)(Leader_Current_gear) * ;
-        float leader_acc_pedal = (float)(Leader_Acc_pedal);// %
-        float leader_brake_pedal = (float)(Leader_Brake_pedal); //%
+        // leader_acc_pedal = (float)(Leader_Acc_pedal);// %
+        //float leader_brake_pedal = (float)(Leader_Brake_pedal); //%
 
         state_mut.unlock();
 
@@ -112,8 +112,7 @@ float Control::Caculate_acc(float v1, float v2, float a1, float long_distance){
         
         //cout << "a = " << a1 << endl;
         //cout << "delta v = " << v1-v2 << endl;
-        //cout << "delta x = " << long_distance - Desired_distance << endl; 
-        
+        //cout << "delta x = " << long_distance - Desired_distance << endl;
         float distance_error = long_distance - float(Desired_distance);
         if(distance_error < 10 && distance_error > -5)
             control_acc = k_a * a1 + k_v * (v1 - v2) + k_d * distance_error;
@@ -122,6 +121,9 @@ float Control::Caculate_acc(float v1, float v2, float a1, float long_distance){
 
         if(control_acc < 0)
             control_acc = control_acc * 4;
+        cout << "Leader Brake Pedal = " << Leader_Brake_pedal << endl;
+        if(Leader_Brake_pedal > 45)
+            control_acc = control_acc - 2.5;
         //control_acc = 0.05 * (long_distance - Desired_distance);
     }
 
