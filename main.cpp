@@ -48,7 +48,7 @@ bool Command_finish = 0;
 bool Command_end = 0;
 
 int Desired_speed = 0;
-int Desired_distance = 20;
+int Desired_distance = 15;
 bool Show_switch = 0;
 bool Run_mode_switch = 1;
 

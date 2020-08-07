@@ -15,9 +15,9 @@ void Communication::CAN0_update(){
             }
             case READY_STATE:{
                 control_mut.lock();
-                Communication::CAN_send(Con2CAN_steer(0,32000,100),
+                Communication::CAN_send(Con2CAN_steer(1,33000,100),
                                         CONTROL_STEER_MSG);
-                Communication::CAN_send(Con2CAN_acc(1,100,0),
+                Communication::CAN_send(Con2CAN_acc(0,100,0),
                                         CONTROL_ACC_MSG);
                 control_mut.unlock();
                 usleep(SAMPLE_TIME);
@@ -185,7 +185,6 @@ void Communication::CAN_send(int *message_ptr,int id,int msg_length,bool EFF, in
 
 int * Communication::CAN_get_msg(int id, bool EFF, int CAN_channel,int *CAN_msg){
     //cout << "Receiving ID " << id << " ..." << endl;
-
     /***********************Sockek_CAN config*****************************/
     int socket_word, nbytes;
     struct sockaddr_can addr;
